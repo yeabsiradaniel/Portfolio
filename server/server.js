@@ -1,3 +1,4 @@
+// Force update for Render deployment
 // Load environment variables from .env file
 require('dotenv').config();
 
