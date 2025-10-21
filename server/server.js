@@ -10,6 +10,7 @@ const cors = require('cors');
 const path = require('path');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const fs = require('fs').promises;
 
 // Import middleware
 const auth = require('./middleware/auth');
@@ -160,14 +161,28 @@ adminRouter.put('/projects/:id', [auth, handleUpload], async (req, res) => {
 
 adminRouter.delete('/projects/:id', auth, async (req, res) => {
     try {
-        let project = await Project.findById(req.params.id);
+        const project = await Project.findById(req.params.id);
         if (!project) {
             return res.status(404).json({ msg: 'Project not found' });
         }
-        await Project.findByIdAndRemove(req.params.id);
+
+        // If the project has an image, delete it from the server
+        if (project.imageUrl && project.imageUrl.startsWith('/uploads/')) {
+            // Correctly construct the image path for deletion, especially for Linux environments
+            const imagePath = path.join(__dirname, project.imageUrl.substring(1));
+            try {
+                await fs.unlink(imagePath);
+            } catch (unlinkErr) {
+                // Log error if image deletion fails but don't block project deletion from DB
+                console.error(`Failed to delete image file: ${imagePath}`, unlinkErr);
+            }
+        }
+
+        await Project.findByIdAndDelete(req.params.id);
+
         res.json({ msg: 'Project removed' });
     } catch (err) {
-        console.error(err.message);
+        console.error(err); // Log the full error object
         res.status(500).send('Server Error');
     }
 });
