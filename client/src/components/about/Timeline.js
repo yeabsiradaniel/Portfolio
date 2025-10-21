@@ -54,7 +54,7 @@ const Timeline = () => {
       {/* Timeline container */}
       <div className="relative max-w-3xl mx-auto">
         {/* The vertical line in the middle of the timeline */}
-        <div className="absolute left-1/2 md:left-1/2 transform -translate-x-1/2 h-full w-1 bg-blue-500 rounded-full opacity-30" style={{ left: 'calc(1.5rem + 1/12 * 100%)' }}></div>
+        <div className="absolute h-full w-1 bg-blue-500 rounded-full opacity-30 transform left-[calc(8.333333%+1.5rem)] md:left-1/2 md:-translate-x-1/2"></div>
         
         {/* Map through the timeline data to create each timeline item */}
         {timelineData.map((item, index) => (
