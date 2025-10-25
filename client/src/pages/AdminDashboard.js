@@ -131,7 +131,7 @@ const AdminDashboard = () => {
       imageUrl: project.imageUrl,
     });
     setIsEditing(true); // Set the form to 'edit' mode
-    setImagePreview(`http://localhost:5000${project.imageUrl}`);
+    setImagePreview(project.imageUrl);
   };
 
   /**
