@@ -79,7 +79,7 @@ apiRouter.post('/contact', async (req, res) => {
   }
 });
 
-app.use('/api', apiRouter);
+app.use(apiRouter);
 
 // --- Admin Routes ---
 
