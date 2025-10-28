@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // For programmatic navigation
 import { motion } from 'framer-motion'; // For animations
-import axios from 'axios'; // For making HTTP requests
+import api from '../api/axios'; // Import the configured axios instance
 
 /**
  * The AdminLogin page component.
@@ -39,7 +39,7 @@ const AdminLogin = () => {
     e.preventDefault(); // Prevent the default form submission behavior
     try {
       // Send a POST request to the /admin/login endpoint
-      const res = await axios.post('/admin/login', { username, password });
+      const res = await api.post('/admin/login', { username, password });
       
       // If login is successful, store the received token in localStorage
       localStorage.setItem('token', res.data.token);

@@ -1,6 +1,6 @@
 // Import necessary libraries and hooks
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // For making HTTP requests
+import api from '../api/axios'; // Import the configured axios instance
 import { motion } from 'framer-motion'; // For animations
 
 /**
@@ -32,7 +32,7 @@ const AdminDashboard = () => {
     const fetchProjects = async () => {
       try {
         // Make a GET request to the API to get all projects
-        const res = await axios.get('/api/projects');
+        const res = await api.get('/projects');
         setProjects(res.data);
       } catch (err) {
         console.error(err);
@@ -46,11 +46,10 @@ const AdminDashboard = () => {
    * @param {string} token - The authentication token.
    */
   const setAuthToken = (token) => {
-    if (token) {
-      axios.defaults.headers.common['x-auth-token'] = token;
-    } else {
-      delete axios.defaults.headers.common['x-auth-token'];
-    }
+          if (token) {
+            api.defaults.headers.common['x-auth-token'] = token;
+        } else {
+          delete api.defaults.headers.common['x-auth-token'];    }
   };
 
   /**
@@ -93,7 +92,7 @@ const AdminDashboard = () => {
     try {
       if (isEditing) {
         // If editing, send a PUT request to update the project
-        const res = await axios.put(`/admin/projects/${formData._id}`, postData, {
+        const res = await api.put(`/admin/projects/${formData._id}`, postData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -102,7 +101,7 @@ const AdminDashboard = () => {
         setProjects(projects.map((p) => (p._id === formData._id ? res.data : p)));
       } else {
         // If adding, send a POST request to create a new project
-        const res = await axios.post('/admin/projects', postData, {
+        const res = await api.post('/admin/projects', postData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -143,7 +142,7 @@ const AdminDashboard = () => {
     setAuthToken(token);
     try {
       // Send a DELETE request to the server
-      await axios.delete(`/admin/projects/${id}`);
+      await api.delete(`/admin/projects/${id}`);
       // Filter out the deleted project from the state
       setProjects(projects.filter((p) => p._id !== id));
     } catch (err) {
