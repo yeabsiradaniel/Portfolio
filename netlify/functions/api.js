@@ -31,6 +31,14 @@ app.use(cors());
 // Parse incoming request bodies
 app.use(express.json());
 
+// Request Logger Middleware
+app.use((req, res, next) => {
+  console.log(`Request Method: ${req.method}`);
+  console.log(`Request Path: ${req.path}`);
+  console.log('Request Body:', req.body);
+  next();
+});
+
 // --- Database Connection ---
 
 mongoose.connect(process.env.MONGODB_URI)
