@@ -31,13 +31,7 @@ app.use(cors());
 // Parse incoming request bodies
 app.use(express.json());
 
-// Request Logger Middleware
-app.use((req, res, next) => {
-  console.log(`Request Method: ${req.method}`);
-  console.log(`Request Path: ${req.path}`);
-  console.log('Request Body:', req.body);
-  next();
-});
+
 
 // --- Database Connection ---
 
@@ -47,7 +41,7 @@ mongoose.connect(process.env.MONGODB_URI)
 
 // --- API Routes ---
 
-app.get('/projects', async (req, res) => {
+app.get('/api/projects', async (req, res) => {
   try {
     const projects = await Project.find();
     res.json(projects);
@@ -57,7 +51,7 @@ app.get('/projects', async (req, res) => {
   }
 });
 
-app.post('/projects', async (req, res) => {
+app.post('/api/projects', async (req, res) => {
   const project = new Project({
     title: req.body.title,
     description: req.body.description,
@@ -74,7 +68,7 @@ app.post('/projects', async (req, res) => {
   }
 });
 
-app.post('/contact', async (req, res) => {
+app.post('/api/contact', async (req, res) => {
   const { name, email, message } = req.body;
   const newMessage = new Message({ name, email, message });
   try {
@@ -87,7 +81,7 @@ app.post('/contact', async (req, res) => {
 
 // --- Admin Routes ---
 
-app.post('/admin/login', async (req, res) => {
+app.post('/api/admin/login', async (req, res) => {
   const { username, password } = req.body;
   try {
     if (username !== process.env.ADMIN_USERNAME) {
@@ -108,7 +102,7 @@ app.post('/admin/login', async (req, res) => {
   }
 });
 
-app.post('/admin/projects', [auth, handleUpload], async (req, res) => {
+app.post('/api/admin/projects', [auth, handleUpload], async (req, res) => {
     const { title, description, techStack, liveLink, githubLink } = req.body;
     const imageUrl = req.file ? req.file.path : '';
     try {
@@ -128,7 +122,7 @@ app.post('/admin/projects', [auth, handleUpload], async (req, res) => {
     }
 });
 
-app.put('/admin/projects/:id', [auth, handleUpload], async (req, res) => {
+app.put('/api/admin/projects/:id', [auth, handleUpload], async (req, res) => {
     const { title, description, techStack, liveLink, githubLink, imageUrl } = req.body;
     const projectFields = {};
     if (title) projectFields.title = title;
@@ -158,7 +152,7 @@ app.put('/admin/projects/:id', [auth, handleUpload], async (req, res) => {
     }
 });
 
-app.delete('/admin/projects/:id', auth, async (req, res) => {
+app.delete('/api/admin/projects/:id', auth, async (req, res) => {
     try {
         const project = await Project.findById(req.params.id);
         if (!project) {
