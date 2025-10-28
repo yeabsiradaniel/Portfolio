@@ -14,21 +14,15 @@ function useDocumentTitle(title, prevailOnUnmount = false) {
 
   // This useEffect hook runs whenever the `title` prop changes.
   useEffect(() => {
-    // Set the document title, appending a consistent suffix.
+    const originalTitle = defaultTitle.current;
     document.title = `${title} | MyPortfolio`;
-  }, [title]); // The dependency array ensures this effect only runs when `title` changes.
 
-  // This useEffect hook runs only once when the component mounts and returns a cleanup function.
-  useEffect(() => {
-    // The returned function is the cleanup function, which runs when the component unmounts.
     return () => {
-      // If `prevailOnUnmount` is false (the default), revert the document title
-      // back to its original value.
       if (!prevailOnUnmount) {
-        document.title = defaultTitle.current;
+        document.title = originalTitle;
       }
     };
-  }, []); // The empty dependency array means this effect runs only on mount and unmount.
+  }, [title, prevailOnUnmount]); // The empty dependency array means this effect runs only on mount and unmount.
 }
 
 // Export the custom hook

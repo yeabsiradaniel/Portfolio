@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useMemo } from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import * as THREE from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
@@ -10,7 +10,7 @@ const Model = () => {
   const clock = useRef(new THREE.Clock());
   const pointer = useRef({ x: 0, y: 0 });
   const targetRotation = useRef({ x: 0, y: 0 });
-  const { camera, gl: renderer, scene } = useThree();
+  const { camera, gl: renderer } = useThree();
   const { theme } = useTheme();
   const isDarkMode = theme === 'dark';
 
