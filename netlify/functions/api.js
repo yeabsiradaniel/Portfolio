@@ -39,9 +39,7 @@ mongoose.connect(process.env.MONGODB_URI)
 
 // --- API Routes ---
 
-const apiRouter = express.Router();
-
-apiRouter.get('/projects', async (req, res) => {
+app.get('/projects', async (req, res) => {
   try {
     const projects = await Project.find();
     res.json(projects);
@@ -51,7 +49,7 @@ apiRouter.get('/projects', async (req, res) => {
   }
 });
 
-apiRouter.post('/projects', async (req, res) => {
+app.post('/projects', async (req, res) => {
   const project = new Project({
     title: req.body.title,
     description: req.body.description,
@@ -68,7 +66,7 @@ apiRouter.post('/projects', async (req, res) => {
   }
 });
 
-apiRouter.post('/contact', async (req, res) => {
+app.post('/contact', async (req, res) => {
   const { name, email, message } = req.body;
   const newMessage = new Message({ name, email, message });
   try {
@@ -79,13 +77,9 @@ apiRouter.post('/contact', async (req, res) => {
   }
 });
 
-app.use(apiRouter);
-
 // --- Admin Routes ---
 
-const adminRouter = express.Router();
-
-adminRouter.post('/login', async (req, res) => {
+app.post('/admin/login', async (req, res) => {
   const { username, password } = req.body;
   try {
     if (username !== process.env.ADMIN_USERNAME) {
@@ -106,7 +100,7 @@ adminRouter.post('/login', async (req, res) => {
   }
 });
 
-adminRouter.post('/projects', [auth, handleUpload], async (req, res) => {
+app.post('/admin/projects', [auth, handleUpload], async (req, res) => {
     const { title, description, techStack, liveLink, githubLink } = req.body;
     const imageUrl = req.file ? req.file.path : '';
     try {
@@ -126,7 +120,7 @@ adminRouter.post('/projects', [auth, handleUpload], async (req, res) => {
     }
 });
 
-adminRouter.put('/projects/:id', [auth, handleUpload], async (req, res) => {
+app.put('/admin/projects/:id', [auth, handleUpload], async (req, res) => {
     const { title, description, techStack, liveLink, githubLink, imageUrl } = req.body;
     const projectFields = {};
     if (title) projectFields.title = title;
@@ -156,7 +150,7 @@ adminRouter.put('/projects/:id', [auth, handleUpload], async (req, res) => {
     }
 });
 
-adminRouter.delete('/projects/:id', auth, async (req, res) => {
+app.delete('/admin/projects/:id', auth, async (req, res) => {
     try {
         const project = await Project.findById(req.params.id);
         if (!project) {
@@ -173,8 +167,6 @@ adminRouter.delete('/projects/:id', auth, async (req, res) => {
         res.status(500).send('Server Error');
     }
 });
-
-app.use('/admin', adminRouter);
 
 // Serve uploaded files statically
 // app.use('/uploads', express.static('uploads'));
