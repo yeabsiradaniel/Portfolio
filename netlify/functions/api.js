@@ -108,7 +108,7 @@ adminRouter.post('/login', async (req, res) => {
 
 adminRouter.post('/projects', [auth, handleUpload], async (req, res) => {
     const { title, description, techStack, liveLink, githubLink } = req.body;
-    const imageUrl = req.file ? `/uploads/${req.file.filename}` : '';
+    const imageUrl = req.file ? req.file.path : '';
     try {
         const newProject = new Project({
             title,
@@ -139,7 +139,7 @@ adminRouter.put('/projects/:id', [auth, handleUpload], async (req, res) => {
     if (liveLink) projectFields.liveLink = liveLink;
     if (githubLink) projectFields.githubLink = githubLink;
     if (req.file) {
-        projectFields.imageUrl = `/uploads/${req.file.filename}`;
+        projectFields.imageUrl = req.file.path;
     } else if (imageUrl) {
         projectFields.imageUrl = imageUrl;
     }
@@ -163,17 +163,7 @@ adminRouter.delete('/projects/:id', auth, async (req, res) => {
             return res.status(404).json({ msg: 'Project not found' });
         }
 
-        // If the project has an image, delete it from the server
-        if (project.imageUrl && project.imageUrl.startsWith('/uploads/')) {
-            // Correctly construct the image path for deletion, especially for Linux environments
-            const imagePath = path.join(__dirname, '..', '..', 'server', project.imageUrl.substring(1));
-            try {
-                await fs.unlink(imagePath);
-            } catch (unlinkErr) {
-                // Log error if image deletion fails but don't block project deletion from DB
-                console.error(`Failed to delete image file: ${imagePath}`, unlinkErr);
-            }
-        }
+        // The old file deletion logic is removed as files are now on Cloudinary.
 
         await Project.findByIdAndDelete(req.params.id);
 
