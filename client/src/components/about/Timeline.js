@@ -4,40 +4,22 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 // An array of objects representing events in my professional journey.
 const timelineData = [
   {
-    year: '2025',
-    title: 'Full-Stack Developer',
-    company: 'Personal Project – Gara Bike',
-    description: 'Built a full-featured bike-sharing app using Flutter and React, with real-time map tracking, authentication, subscriptions, and a custom admin dashboard.',
+    year: '2026',
+    title: 'Flutter Developer',
+    company: 'Step Tracking App (NDA — Play Store Beta)',
+    description: 'Building a cross-platform step-tracking mobile application for a client using Flutter, Django, PostgreSQL, and Firebase Cloud Messaging. Currently shipping to the Google Play Store in beta.',
   },
   {
     year: '2025',
-    title: 'Automation Developer',
-    company: 'Personal Project',
-    description: 'Created a Python-based automation tool that scrapes job posts from Telegram and auto-generates CVs and cover letters using Google Gemini.',
-  },
-  {
-    year: '2024',
-    title: 'Full-Stack Developer',
-    company: 'Personal Project – E-commerce App (MERN)',
-    description: 'Developed a full-stack e-commerce platform using MongoDB, Express, React, and Node.js with user auth, product management, and cart/checkout functionality.',
-  },
-  {
-    year: '2024',
     title: 'React Developer',
     company: 'Gebeta Maps (gebeta.app)',
-    description: 'Contributed to frontend development using React, enhancing UI components and user experience for a real-time mapping and location-based service platform.',
+    description: 'Contributed to frontend development for a production mapping and location-based service platform, building and enhancing React UI components used by real users.',
   },
   {
     year: '2024',
-    title: 'Full-Stack Developer',
-    company: 'Personal Project – User Profile App',
-    description: 'Built a secure, role-based user management system with Flutter and Node.js, integrating file uploads via Cloudinary and JWT-based authentication.',
-  },
-  {
-    year: '2023',
-    title: 'Mobile App Developer',
-    company: 'Personal/Freelance Projects',
-    description: 'Developed multiple cross-platform mobile apps in Flutter, integrating Firebase, REST APIs, and responsive design.',
+    title: 'Flutter & Full-Stack Developer',
+    company: 'Independent Projects',
+    description: 'Built and deployed cross-platform mobile apps and full-stack web applications using Flutter with BLoC architecture, the MERN stack, and cloud deployment pipelines.',
   },
 ];
 

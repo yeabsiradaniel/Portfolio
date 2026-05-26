@@ -108,7 +108,7 @@ const Hero = () => {
                   textShadow: 'var(--hero-shadow)',
                 }}
               >
-                I Build <FlipWords words={['Modern', 'Scalable', 'Beautiful', 'Performant']} /> Applications
+                I Build <FlipWords words={['Cross-Platform', 'Production-Ready', 'Scalable']} /> Applications
               </h2>
             </motion.div>
             <motion.div
@@ -120,7 +120,7 @@ const Hero = () => {
                 className="text-base lg:text-xl text-gray-900 dark:text-gray-100 mb-8 font-sans max-w-2xl mx-auto lg:ml-auto lg:mr-0 transition-colors duration-300"
                 style={{ textShadow: 'var(--hero-shadow-sm)' }}
               >
-                I build modern mobile and web applications using Flutter, MERN stack, and Python automation. Passionate about turning ideas into clean, scalable, real-world solutions.
+                Flutter mobile developer and MERN full-stack engineer. I ship cross-platform apps with clean architecture, real API integrations, and production deployment pipelines. Based in Addis Ababa — available for remote contract work worldwide.
               </p>
             </motion.div>
             <motion.div

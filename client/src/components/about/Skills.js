@@ -1,60 +1,79 @@
 import React from 'react';
-import { motion } from 'framer-motion'; // For animations
+import { motion } from 'framer-motion';
 
-// An array of skill objects, each with a name and a proficiency level (out of 100).
-const skills = [
-  { name: 'Flutter', level: 90 },
-  { name: 'Automation (Python + Gemini, etc.)', level: 88 },
-  { name: 'Python (for automation)', level: 85 },
-  { name: 'Git & GitHub', level: 85 },
-  { name: 'React.js', level: 82 },
-  { name: 'REST API Development', level: 80 },
-  { name: 'Node.js', level: 78 },
-  { name: 'Express.js', level: 77 },
-  { name: 'Cloudinary & Multer', level: 75 },
-  { name: 'MongoDB', level: 75 },
-  { name: 'Firebase (Auth, Realtime DB)', level: 70 },
-  { name: 'HTML/CSS/JS', level: 75 },
+const skillCategories = [
+  {
+    title: 'Mobile Development',
+    skills: [
+      'Flutter & Dart',
+      'BLoC / Cubit State Management',
+      'Dio HTTP Client',
+      'Hive Local Storage',
+      'Firebase (Auth, FCM, Crashlytics)',
+      'Platform Channels',
+      'Play Store Deployment',
+    ],
+  },
+  {
+    title: 'Web & Backend Development',
+    skills: [
+      'React.js',
+      'Node.js & Express.js',
+      'Django & Python',
+      'MongoDB & Mongoose',
+      'PostgreSQL',
+      'REST API Design',
+      'JWT Authentication',
+      'Tailwind CSS',
+    ],
+  },
+  {
+    title: 'DevOps & Tools',
+    skills: [
+      'Git & GitHub',
+      'CI/CD (GitHub Actions)',
+      'Cloudinary (Media Management)',
+      'Netlify / Vercel Deployment',
+      'Postman / API Testing',
+    ],
+  },
 ];
 
-/**
- * The Skills component.
- * Displays a list of skills with animated progress bars.
- */
 const Skills = () => {
   return (
     <div className="text-center">
-      {/* Section Title */}
       <h2 className="text-4xl md:text-5xl font-heading font-bold mb-12">My Skills</h2>
-      
-      {/* Grid container for the skills */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8 max-w-4xl mx-auto">
-        {/* Map through the skills array to render each skill */}
-        {skills.map((skill, index) => (
-          <div key={index} className="mb-4">
-            {/* Skill name and percentage level */}
-            <div className="flex justify-between mb-2">
-              <span className="font-sans font-medium text-xl">{skill.name}</span>
-              <span className="text-sm font-sans font-medium text-accent">{skill.level}%</span>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        {skillCategories.map((category, catIndex) => (
+          <motion.div
+            key={category.title}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.5, delay: catIndex * 0.15 }}
+            className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-xl p-6 shadow-md text-left transition-colors duration-800 ease-in-out"
+          >
+            <h3 className="font-heading font-bold text-lg mb-4 text-accent">{category.title}</h3>
+            <div className="flex flex-wrap gap-2">
+              {category.skills.map((skill, skillIndex) => (
+                <motion.span
+                  key={skill}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.3, delay: catIndex * 0.15 + skillIndex * 0.05 }}
+                  className="px-3 py-1.5 text-sm font-sans font-medium rounded-full bg-accent/10 dark:bg-accent/20 text-gray-800 dark:text-gray-200 transition-colors duration-300"
+                >
+                  {skill}
+                </motion.span>
+              ))}
             </div>
-            
-            {/* Background of the progress bar */}
-            <div className="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-700 overflow-hidden transition-colors duration-800 ease-in-out">
-              {/* Animated foreground of the progress bar */}
-              <motion.div
-                className="bg-gradient-to-r from-accent via-purple-500 to-pink-500 h-4 rounded-full shadow-md dark:shadow-[0_0_8px_rgba(147,51,234,0.5)]"
-                initial={{ width: 0 }} // Starts with a width of 0
-                whileInView={{ width: `${skill.level}%` }} // Animates to the skill's level percentage when in view
-                viewport={{  amount: 0.8 }} // Animation triggers once when 80% of the element is visible
-                transition={{ duration: 1, delay: 0.1 * index, ease: 'easeOut' }} // Staggered animation delay for each bar
-              />
-            </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>
   );
 };
 
-// Export the Skills component
 export default Skills;
