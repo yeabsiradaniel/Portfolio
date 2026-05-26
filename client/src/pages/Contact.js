@@ -48,11 +48,11 @@ const Contact = () => {
       className="container mx-auto px-4 py-16"
     >
       {/* Page Title */}
-      <h1 className="text-4xl font-serif font-bold text-center mb-8">Get In Touch</h1>
+      <h1 className="text-4xl font-heading font-bold text-center mb-8">Get In Touch</h1>
       
       {/* Contact Information Box */}
       <div className="max-w-xl mx-auto mb-12 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md transition-colors duration-300">
-        <h2 className="text-2xl font-serif font-bold text-center mb-6">Contact Information</h2>
+        <h2 className="text-2xl font-heading font-bold text-center mb-6">Contact Information</h2>
         <div className="space-y-4">
           {/* Map through the contactDetails array to render each contact item */}
           {contactDetails.map((detail, index) => (

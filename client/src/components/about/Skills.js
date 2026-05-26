@@ -25,7 +25,7 @@ const Skills = () => {
   return (
     <div className="text-center">
       {/* Section Title */}
-      <h2 className="text-4xl md:text-5xl font-serif font-bold mb-12">My Skills</h2>
+      <h2 className="text-4xl md:text-5xl font-heading font-bold mb-12">My Skills</h2>
       
       {/* Grid container for the skills */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8 max-w-4xl mx-auto">
@@ -35,14 +35,14 @@ const Skills = () => {
             {/* Skill name and percentage level */}
             <div className="flex justify-between mb-2">
               <span className="font-sans font-medium text-xl">{skill.name}</span>
-              <span className="text-sm font-sans font-medium text-blue-500">{skill.level}%</span>
+              <span className="text-sm font-sans font-medium text-accent">{skill.level}%</span>
             </div>
             
             {/* Background of the progress bar */}
             <div className="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-700 overflow-hidden transition-colors duration-800 ease-in-out">
               {/* Animated foreground of the progress bar */}
               <motion.div
-                className="bg-blue-500 h-4 rounded-full shadow-md"
+                className="bg-gradient-to-r from-accent via-purple-500 to-pink-500 h-4 rounded-full shadow-md dark:shadow-[0_0_8px_rgba(147,51,234,0.5)]"
                 initial={{ width: 0 }} // Starts with a width of 0
                 whileInView={{ width: `${skill.level}%` }} // Animates to the skill's level percentage when in view
                 viewport={{  amount: 0.8 }} // Animation triggers once when 80% of the element is visible

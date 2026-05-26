@@ -15,16 +15,20 @@ const AboutMe = () => {
         transition={{ duration: 0.8, ease: 'easeOut' }} // Animation timing and easing
         className="inline-block mb-8"
       >
-        {/* Profile picture */}
-        <img
-          src="/images/profile.jpg"
-          alt="Yeabsira Daniel"
-          className="rounded-full w-48 h-48 object-cover shadow-lg border-4 border-white dark:border-gray-800 transform hover:scale-105 transition-transform duration-300"
-        />
+        {/* Profile picture with rotating gradient border */}
+        <div className="relative w-52 h-52 rounded-full p-1 animate-spin-slow bg-gradient-to-tr from-accent via-purple-500 to-pink-500">
+          <div className="rounded-full w-full h-full animate-spin-slow" style={{ animationDirection: 'reverse' }}>
+            <img
+              src="/images/profile.jpg"
+              alt="Yeabsira Daniel"
+              className="rounded-full w-full h-full object-cover shadow-lg border-4 border-white dark:border-gray-800"
+            />
+          </div>
+        </div>
       </motion.div>
       
       {/* Headline */}
-      <h1 className="text-5xl md:text-6xl font-serif font-bold mb-4">About Me</h1>
+      <h1 className="font-heading font-bold mb-4" style={{ fontSize: 'clamp(2rem, 5vw, 3.75rem)' }}>About Me</h1>
       
       {/* Introduction paragraph */}
       <p className="text-xl md:text-2xl max-w-3xl mx-auto text-gray-600 dark:text-gray-400 leading-relaxed transition-colors duration-800 ease-in-out font-sans">
