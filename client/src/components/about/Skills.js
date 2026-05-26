@@ -39,6 +39,35 @@ const skillCategories = [
   },
 ];
 
+const cardVariants = {
+  hidden: { opacity: 0, y: 40, scale: 0.95 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.5,
+      delay: i * 0.2,
+      ease: 'easeOut',
+    },
+  }),
+};
+
+const tagVariants = {
+  hidden: { opacity: 0, y: 12, scale: 0.7 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: 'spring',
+      stiffness: 260,
+      damping: 18,
+      delay: i * 0.06,
+    },
+  }),
+};
+
 const Skills = () => {
   return (
     <div className="text-center">
@@ -48,22 +77,32 @@ const Skills = () => {
         {skillCategories.map((category, catIndex) => (
           <motion.div
             key={category.title}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            custom={catIndex}
+            variants={cardVariants}
+            initial="hidden"
+            whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.5, delay: catIndex * 0.15 }}
-            className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-xl p-6 shadow-md text-left transition-colors duration-800 ease-in-out"
+            whileHover={{ y: -6, boxShadow: '0 12px 30px rgba(0,0,0,0.12)' }}
+            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-xl p-6 shadow-md text-left transition-colors duration-800 ease-in-out cursor-default"
           >
             <h3 className="font-heading font-bold text-lg mb-4 text-accent">{category.title}</h3>
             <div className="flex flex-wrap gap-2">
               {category.skills.map((skill, skillIndex) => (
                 <motion.span
                   key={skill}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
+                  custom={skillIndex}
+                  variants={tagVariants}
+                  initial="hidden"
+                  whileInView="visible"
                   viewport={{ once: true }}
-                  transition={{ duration: 0.3, delay: catIndex * 0.15 + skillIndex * 0.05 }}
-                  className="px-3 py-1.5 text-sm font-sans font-medium rounded-full bg-accent/10 dark:bg-accent/20 text-gray-800 dark:text-gray-200 transition-colors duration-300"
+                  whileHover={{
+                    scale: 1.1,
+                    backgroundColor: 'rgba(var(--color-accent), 0.25)',
+                    transition: { duration: 0.2 },
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-3 py-1.5 text-sm font-sans font-medium rounded-full bg-accent/10 dark:bg-accent/20 text-gray-800 dark:text-gray-200 transition-colors duration-300 cursor-default select-none"
                 >
                   {skill}
                 </motion.span>
