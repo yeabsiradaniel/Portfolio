@@ -14,7 +14,30 @@ const serverless = require('serverless-http');
 
 // Import middleware
 const auth = require('../../server/middleware/auth');
-const handleUpload = require('../../server/middleware/handleUpload');
+
+// Cloudinary + multer for file uploads (no disk storage — Netlify is read-only)
+const cloudinary = require('cloudinary').v2;
+const multer = require('multer');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: { folder: 'portfolio', allowed_formats: ['jpg', 'jpeg', 'png', 'gif'] },
+});
+
+const upload = multer({ storage, limits: { fileSize: 5000000 } }).single('image');
+const handleUpload = (req, res, next) => {
+  upload(req, res, (err) => {
+    if (err) return res.status(400).json({ msg: `Upload error: ${err.message}` });
+    next();
+  });
+};
 
 // Import models
 const Project = require('../../server/models/Project');
@@ -104,7 +127,7 @@ app.post('/api/admin/login', async (req, res) => {
 
 app.post('/api/admin/projects', [auth, handleUpload], async (req, res) => {
     const { title, description, techStack, liveLink, githubLink } = req.body;
-    const imageUrl = req.file ? req.file.path : '';
+    const imageUrl = req.file ? req.file.path || req.file.secure_url : '';
     try {
         const newProject = new Project({
             title,
@@ -135,7 +158,7 @@ app.put('/api/admin/projects/:id', [auth, handleUpload], async (req, res) => {
     if (liveLink) projectFields.liveLink = liveLink;
     if (githubLink) projectFields.githubLink = githubLink;
     if (req.file) {
-        projectFields.imageUrl = req.file.path;
+        projectFields.imageUrl = req.file.path || req.file.secure_url;
     } else if (imageUrl) {
         projectFields.imageUrl = imageUrl;
     }
