@@ -6,7 +6,7 @@ const timelineData = [
   {
     year: '2026',
     title: 'Flutter Developer',
-    company: 'Step Tracking App (NDA — Play Store Beta)',
+    company: 'Step Tracking App (NDA, Play Store Beta)',
     description: 'Building a cross-platform step-tracking mobile application for a client using Flutter, Django, PostgreSQL, and Firebase Cloud Messaging. Currently shipping to the Google Play Store in beta.',
   },
   {

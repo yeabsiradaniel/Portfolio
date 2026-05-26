@@ -88,7 +88,7 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-heading font-bold text-center mb-4">Get In Touch</h2>
           <p className="text-center text-gray-600 dark:text-gray-400 font-sans mb-8 max-w-xl mx-auto transition-colors duration-300">
-            Available for remote contract work — full-time or part-time. UTC+3 (East Africa Time), overlapping with EU, UK, and Middle East business hours. Typically responds within 4 hours.
+            Available for remote contract work, full-time or part-time. UTC+3 (East Africa Time), overlapping with EU, UK, and Middle East business hours. Typically responds within 4 hours.
           </p>
           <div className="max-w-2xl mx-auto mb-12 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
             {contactDetails.map((detail, index) => (

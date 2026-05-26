@@ -32,7 +32,7 @@ const AboutMe = () => {
       
       {/* Introduction paragraph */}
       <p className="text-xl md:text-2xl max-w-3xl mx-auto text-gray-600 dark:text-gray-400 leading-relaxed transition-colors duration-800 ease-in-out font-sans">
-        I specialize in Flutter mobile development and full-stack web applications. I’m currently building a step-tracking mobile app for a company using Flutter, Django, PostgreSQL, and Firebase Cloud Messaging — shipping to the Play Store in beta. Previously, I contributed production React components to Gebeta Maps (gebeta.app), a mapping platform serving real users. I architect Flutter apps using BLoC state management, clean layered architecture, and CI/CD deployment. On the web side, I build full-stack applications with Node.js, Express, MongoDB, and React, with proper authentication, file handling, and API design. I’m based in Addis Ababa, Ethiopia (UTC+3), overlapping with European and Middle Eastern business hours.
+        I specialize in Flutter mobile development and full-stack web applications. I’m currently building a step-tracking mobile app for a company using Flutter, Django, PostgreSQL, and Firebase Cloud Messaging, shipping to the Play Store in beta. Previously, I contributed production React components to Gebeta Maps (gebeta.app), a mapping platform serving real users. I architect Flutter apps using BLoC state management, clean layered architecture, and CI/CD deployment. On the web side, I build full-stack applications with Node.js, Express, MongoDB, and React, with proper authentication, file handling, and API design. I’m based in Addis Ababa, Ethiopia (UTC+3), overlapping with European and Middle Eastern business hours.
       </p>
     </div>
   );
