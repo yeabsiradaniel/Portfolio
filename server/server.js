@@ -187,7 +187,7 @@ adminRouter.delete('/projects/:id', auth, async (req, res) => {
     }
 });
 
-app.use('/admin', adminRouter);
+app.use('/api/admin', adminRouter);
 
 // Serve uploaded files statically
 app.use('/uploads', express.static('uploads'));

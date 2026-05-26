@@ -66,7 +66,7 @@ const ProjectModal = ({ project, closeModal }) => {
               <h3 className="text-xl font-semibold mb-2">Tech Stack</h3>
               <div className="flex flex-wrap gap-2">
                 {project.techStack.map((tech, index) => (
-                  <span key={index} className="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 transition-colors duration-300">
+                  <span key={index} className="bg-accent/10 text-accent text-sm font-medium mr-2 px-2.5 py-0.5 rounded transition-colors duration-300">
                     {tech}
                   </span>
                 ))}
@@ -82,7 +82,7 @@ const ProjectModal = ({ project, closeModal }) => {
                   // Stop propagation to prevent the modal from closing when a link is clicked
                   onPointerDown={(e) => e.stopPropagation()}
                   onClick={(e) => e.stopPropagation()}
-                  className="text-blue-500 hover:underline"
+                  className="text-accent hover:underline"
                 >
                   Live Demo
                 </a>
@@ -94,7 +94,7 @@ const ProjectModal = ({ project, closeModal }) => {
                   rel="noopener noreferrer"
                   onPointerDown={(e) => e.stopPropagation()}
                   onClick={(e) => e.stopPropagation()}
-                  className="text-blue-500 hover:underline"
+                  className="text-accent hover:underline"
                 >
                   GitHub
                 </a>

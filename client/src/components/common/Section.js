@@ -14,10 +14,10 @@ const Section = ({ children, className }) => {
     // The `motion.section` component from Framer Motion enables animations on the section element.
     <motion.section
       // Animation properties
-      initial={{ opacity: 0, y: 50 }} // Initial state: transparent and 50px down
-      whileInView={{ opacity: 1, y: 0 }} // Animate to: opaque and at its original position when it enters the viewport
-      viewport={{ once: true, amount: 0.3 }} // Trigger the animation once when 30% of the section is visible
-      transition={{ duration: 0.8 }} // The animation should take 0.8 seconds
+      initial={{ opacity: 0, y: 30, scale: 0.98 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.6, ease: 'easeOut' }}
       // CSS classes for styling
       className={`py-16 sm:py-24 ${className}`}>
       {/* A centered container for the content */}

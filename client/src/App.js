@@ -5,7 +5,6 @@ import { BrowserRouter as Router } from 'react-router-dom';
 // Import layout components
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
-
 // Import routing and theme components
 import AnimatedRoutes from './components/common/AnimatedRoutes';
 import { ThemeProvider } from './hooks/useTheme';

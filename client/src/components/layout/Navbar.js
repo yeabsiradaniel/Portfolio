@@ -1,107 +1,181 @@
-// Import necessary libraries and components
-import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom'; // For navigation links that know if they are active
-import ThemeToggle from '../common/ThemeToggle'; // The dark/light mode toggle button
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid'; // Icons for the mobile menu
-import { motion, AnimatePresence } from 'framer-motion'; // For animations
-import logo from '../../assets/logo.svg'; // The portfolio logo
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import ThemeToggle from '../common/ThemeToggle';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
+import { motion, AnimatePresence } from 'framer-motion';
+import logo from '../../assets/logo.svg';
 
-/**
- * The Navbar component.
- * Displays the main navigation links, logo, and theme toggle.
- * It is responsive and includes a mobile-friendly menu.
- */
 const Navbar = () => {
-  // State to manage the visibility of the mobile menu
   const [isOpen, setIsOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
+  const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  // Array of navigation links to be rendered
+  // Track scroll position for frosted glass effect
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const navLinks = [
-    { title: 'Home', path: '/' },
-    { title: 'About', path: '/about' },
-    { title: 'Projects', path: '/projects' },
-    { title: 'Contact', path: '/contact' },
+    { title: 'Home', id: 'home' },
+    { title: 'About', id: 'about' },
+    { title: 'Projects', id: 'projects' },
+    { title: 'Contact', id: 'contact' },
   ];
 
-  // Animation variants for the mobile menu (using Framer Motion)
-  const mobileMenuVariants = {
-    closed: { opacity: 0, y: '-100%' }, // State when the menu is closed
-    open: { opacity: 1, y: '0%' },     // State when the menu is open
+  // Track which section is in view for active link highlighting
+  useEffect(() => {
+    if (location.pathname !== '/') return;
+
+    const sectionIds = ['home', 'about', 'projects', 'contact'];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [location.pathname]);
+
+  const scrollToSection = (id) => {
+    // If on an admin page, navigate home first then scroll
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+    setIsOpen(false);
   };
+
+  const panelVariants = {
+    closed: { x: '100%' },
+    open: { x: '0%' },
+  };
+
+  const backdropVariants = {
+    closed: { opacity: 0 },
+    open: { opacity: 1 },
+  };
+
+  // Don't show section nav on admin pages
+  const isAdminPage = location.pathname.startsWith('/admin');
 
   return (
     <>
-      {/* Main navigation bar */}
-      <nav className="backdrop-blur-md sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700 transition-colors duration-800 ease-in-out">
+      <nav className={`sticky top-0 z-50 border-b border-gray-200/20 dark:border-gray-700/20 transition-all duration-500 ease-in-out ${
+        scrolled
+          ? 'bg-[#BBA1C3]/70 dark:bg-[#455E3D]/70 backdrop-blur-md shadow-lg'
+          : 'bg-transparent'
+      }`}>
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex items-center">
-              <NavLink to="/">
+              <button onClick={() => scrollToSection('home')} className="cursor-pointer">
                 <img src={logo} alt="MyPortfolio Logo" className="h-14" />
-              </NavLink>
+              </button>
             </div>
-            {/* Desktop Navigation Links (hidden on medium screens and below) */}
-            <div className="hidden md:flex items-center space-x-8">
-              {navLinks.map((link) => (
-                <NavLink
-                  key={link.path}
-                  to={link.path}
-                  // Dynamically set class names based on whether the link is active
-                  className={({ isActive }) =>
-                    `text-lg font-medium transition-colors duration-300 ${isActive ? 'text-blue-500' : 'hover:text-blue-500'}`
-                  }
-                >
-                  {link.title}
-                </NavLink>
-              ))}
-            </div>
-            {/* Right side items: Theme Toggle and Mobile Menu Button */}
+
+            {/* Desktop Navigation Links */}
+            {!isAdminPage && (
+              <div className="hidden md:flex items-center space-x-8">
+                {navLinks.map((link) => (
+                  <button
+                    key={link.id}
+                    onClick={() => scrollToSection(link.id)}
+                    className={`text-lg font-medium transition-colors duration-300 ${
+                      activeSection === link.id ? 'text-accent' : 'hover:text-accent'
+                    }`}
+                  >
+                    {link.title}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Right side: Theme Toggle and Mobile Menu Button */}
             <div className="flex items-center">
               <ThemeToggle />
-              {/* Mobile Menu Button (visible on medium screens and below) */}
-              <div className="md:hidden ml-4">
-                <button onClick={() => setIsOpen(!isOpen)} className="focus:outline-none">
-                  {isOpen ? (
-                    <XMarkIcon className="h-6 w-6" /> // Close icon
-                  ) : (
-                    <Bars3Icon className="h-6 w-6" /> // Hamburger icon
-                  )}
-                </button>
-              </div>
+              {!isAdminPage && (
+                <div className="md:hidden ml-4">
+                  <button onClick={() => setIsOpen(!isOpen)} className="focus:outline-none">
+                    {isOpen ? (
+                      <XMarkIcon className="h-6 w-6" />
+                    ) : (
+                      <Bars3Icon className="h-6 w-6" />
+                    )}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Mobile Menu (animated with Framer Motion) */}
+      {/* Mobile Menu — Slide-in Panel */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial="closed"
-            animate="open"
-            exit="closed"
-            variants={mobileMenuVariants}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed top-0 left-0 w-full h-full bg-white dark:bg-gray-900 z-40 md:hidden transition-colors duration-300"
-          >
-            {/* Links inside the mobile menu */}
-            <div className="flex flex-col items-center justify-center h-full space-y-8">
-              {navLinks.map((link) => (
-                <NavLink
-                  key={link.path}
-                  to={link.path}
-                  className={({ isActive }) =>
-                    `text-3xl font-bold transition-colors duration-300 ${isActive ? 'text-blue-500' : 'hover:text-blue-500'}`
-                  }
-                  // Close the menu when a link is clicked
-                  onClick={() => setIsOpen(false)}
-                >
-                  {link.title}
-                </NavLink>
-              ))}
-            </div>
-          </motion.div>
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial="closed"
+              animate="open"
+              exit="closed"
+              variants={backdropVariants}
+              transition={{ duration: 0.3 }}
+              onClick={() => setIsOpen(false)}
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden"
+            />
+            {/* Panel */}
+            <motion.div
+              initial="closed"
+              animate="open"
+              exit="closed"
+              variants={panelVariants}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              className="fixed top-0 right-0 w-3/4 max-w-xs h-full bg-[#BBA1C3] dark:bg-[#455E3D] z-50 md:hidden shadow-2xl"
+            >
+              <div className="flex justify-end p-4">
+                <button onClick={() => setIsOpen(false)} className="focus:outline-none">
+                  <XMarkIcon className="h-6 w-6" />
+                </button>
+              </div>
+              <div className="flex flex-col items-center pt-12 space-y-8">
+                {navLinks.map((link, i) => (
+                  <motion.button
+                    key={link.id}
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.05 * i }}
+                    onClick={() => scrollToSection(link.id)}
+                    className={`text-2xl font-bold transition-colors duration-300 ${
+                      activeSection === link.id ? 'text-accent' : 'hover:text-accent'
+                    }`}
+                  >
+                    {link.title}
+                  </motion.button>
+                ))}
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </>

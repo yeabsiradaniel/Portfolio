@@ -1,30 +1,44 @@
-import React from 'react';
-import { motion } from 'framer-motion'; // For animations
+import React, { useRef } from 'react';
+import { motion, useSpring } from 'framer-motion';
 
-/**
- * The ProjectCard component.
- * Displays a single project in a card format with an image, title, and description.
- * Clicking the card opens a detailed modal.
- *
- * @param {object} project - The project data to display.
- * @param {function} openModal - The function to call when the card is clicked.
- * @param {number} index - The index of the card in the grid, used for staggered animations.
- */
 const ProjectCard = ({ project, openModal, index }) => {
+  const cardRef = useRef(null);
+  const rotateX = useSpring(0, { stiffness: 200, damping: 20 });
+  const rotateY = useSpring(0, { stiffness: 200, damping: 20 });
+
+  const handleMouseMove = (e) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    rotateX.set(-y * 16);
+    rotateY.set(x * 16);
+  };
+
+  const handleMouseLeave = () => {
+    rotateX.set(0);
+    rotateY.set(0);
+  };
+
   return (
-    // The main card container, animated with Framer Motion.
     <motion.div
-      // `layoutId` is crucial for the shared layout animation between the card and the modal.
+      ref={cardRef}
       layoutId={`card-container-${project._id}`}
       onClick={() => openModal(project)}
-      className="cursor-pointer rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 bg-white dark:bg-gray-800 transform hover:-translate-y-1 transition-colors duration-800 ease-in-out"
-      // Animation properties
-      initial={{ opacity: 0, y: 50 }} // Initial state
-      whileInView={{ opacity: 1, y: 0 }} // Animate when in view
-      viewport={{ once: true, amount: 0.5 }} // Trigger animation once
-      transition={{ duration: 0.5, delay: index * 0.2 }} // Staggered delay
-      whileHover={{ scale: 1.02 }} // Scale up on hover
-      whileTap={{ scale: 0.98 }} // Scale down on click/tap
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="cursor-pointer rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 bg-white dark:bg-gray-800 transition-colors duration-800 ease-in-out"
+      style={{
+        rotateX,
+        rotateY,
+        transformPerspective: 800,
+        transformStyle: 'preserve-3d',
+      }}
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.5 }}
+      transition={{ duration: 0.5, delay: index * 0.2 }}
+      whileTap={{ scale: 0.98 }}
     >
       {/* Project Image */}
       <motion.img

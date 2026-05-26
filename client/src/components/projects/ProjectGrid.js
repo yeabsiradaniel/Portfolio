@@ -54,7 +54,7 @@ const ProjectGrid = () => {
   if (loading) {
     return (
       <div className="text-center py-16">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-accent mx-auto mb-4"></div>
         <p className="text-lg font-sans text-gray-600 dark:text-gray-400 transition-colors duration-800 ease-in-out">Loading projects...</p>
       </div>
     );

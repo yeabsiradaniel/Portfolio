@@ -32,7 +32,7 @@ const Projects = () => {
           {/* A single section containing the page's content */}
           <Section>
             {/* Page Title */}
-            <h1 className="text-4xl md:text-5xl font-serif font-bold text-center mb-12">My Work</h1>
+            <h1 className="text-4xl md:text-5xl font-heading font-bold text-center mb-12">My Work</h1>
             
             {/* The grid of projects */}
             <ProjectGrid />

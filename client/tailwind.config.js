@@ -9,8 +9,15 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Source Sans Pro"', ...fontFamily.sans],
-        serif: ['"Playfair Display"', ...fontFamily.serif],
+        sans: ['Inter', ...fontFamily.sans],
+        heading: ['"Space Grotesk"', ...fontFamily.sans],
+      },
+      colors: {
+        accent: 'rgb(var(--color-accent) / <alpha-value>)',
+        'accent-hover': 'rgb(var(--color-accent-hover) / <alpha-value>)',
+      },
+      animation: {
+        'spin-slow': 'spin 8s linear infinite',
       },
     },
   },
