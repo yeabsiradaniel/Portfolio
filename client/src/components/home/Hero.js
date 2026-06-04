@@ -120,7 +120,7 @@ const Hero = () => {
                 className="text-base lg:text-xl text-gray-900 dark:text-gray-100 mb-8 font-sans max-w-2xl mx-auto lg:ml-auto lg:mr-0 transition-colors duration-300"
                 style={{ textShadow: 'var(--hero-shadow-sm)' }}
               >
-                Flutter mobile developer and MERN full-stack engineer. I ship cross-platform apps with clean architecture, real API integrations, and production deployment pipelines. Based in Addis Ababa, available for remote contract work worldwide.
+                Flutter mobile developer and full-stack engineer with production apps on Google Play Store. I build cross-platform mobile apps, REST APIs, and web applications for clients and companies. Available for remote contract work worldwide.
               </p>
             </motion.div>
             <motion.div

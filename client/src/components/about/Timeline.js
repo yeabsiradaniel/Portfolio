@@ -6,20 +6,38 @@ const timelineData = [
   {
     year: '2026',
     title: 'Flutter Developer',
-    company: 'Step Tracking App (NDA, Play Store Beta)',
-    description: 'Building a cross-platform step-tracking mobile application for a client using Flutter, Django, PostgreSQL, and Firebase Cloud Messaging. Currently shipping to the Google Play Store in beta.',
+    company: 'ShegerWalk (NDA, Play Store Beta)',
+    description: 'Building a gamified step-tracking app for a client using Flutter, Django, PostgreSQL, and FCM. Features native pedometer integration, GPS-mapped walks, and milestone challenges. Deploying to Play Store.',
+  },
+  {
+    year: '2025',
+    title: 'Flutter Developer',
+    company: 'BudgetSMS, Expense Tracker',
+    description: 'Built a personal finance app that parses bank SMS notifications from multiple Ethiopian banks, automatically categorizes transactions, and enforces a 50/30/20 budget split with daily spending limits.',
   },
   {
     year: '2025',
     title: 'React Developer',
     company: 'Gebeta Maps (gebeta.app)',
-    description: 'Contributed to frontend development for a production mapping and location-based service platform, building and enhancing React UI components used by real users.',
+    description: 'Led frontend development of mapping UI components for a production navigation API platform serving delivery clients including Adika and Tikus in Addis Ababa.',
+  },
+  {
+    year: '2025',
+    title: 'Flutter Developer',
+    company: 'TaskFlow, Task Management App',
+    description: 'Developed an offline-first task manager with Firestore cloud sync, BLoC state management, Firebase Auth, color-coded categories, and scheduled notifications. Open source on GitHub.',
   },
   {
     year: '2024',
-    title: 'Flutter & Full-Stack Developer',
-    company: 'Independent Projects',
-    description: 'Built and deployed cross-platform mobile apps and full-stack web applications using Flutter with BLoC architecture, the MERN stack, and cloud deployment pipelines.',
+    title: 'Full-Stack Developer',
+    company: 'Freelance Client Projects',
+    description: 'Delivered mobile and web solutions for local businesses including a restaurant ordering system and an inventory management tool using Flutter, Node.js, Express, and MongoDB.',
+  },
+  {
+    year: '2024',
+    title: 'Mobile Developer',
+    company: 'Freelance, Multiple Clients',
+    description: 'Built cross-platform mobile applications for small businesses and startups using Flutter with Firebase backend services, REST API integrations, and Play Store deployment.',
   },
 ];
 
