@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { EnvelopeIcon } from '@heroicons/react/24/solid';
@@ -20,6 +20,18 @@ const Hero = () => {
   const { theme } = useTheme();
   const isDarkMode = theme === 'dark';
 
+  // Mount only one canvas per breakpoint: the desktop side panel or the
+  // mobile full-bleed layer, never both
+  const [isSmall, setIsSmall] = useState(
+    () => typeof window !== 'undefined' && window.innerWidth < 1024
+  );
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 1023px)');
+    const onChange = (e) => setIsSmall(e.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
   const scrollToSection = (id) => scrollToId(id);
 
   return (
@@ -28,6 +40,15 @@ const Hero = () => {
       style={{ marginTop: '-64px', paddingTop: '64px' }}
     >
       <ParallaxBackground />
+
+      {/* Mobile constellation: full-bleed behind the hero text */}
+      {isSmall && (
+        <div className="absolute inset-0 z-[5] pointer-events-none lg:hidden" style={{ opacity: 0.8 }}>
+          <Suspense fallback={null}>
+            <HeroScene isDarkMode={isDarkMode} mobile />
+          </Suspense>
+        </div>
+      )}
 
       {/* Social links */}
       <motion.div
@@ -82,16 +103,18 @@ const Hero = () => {
       {/* Foreground Content */}
       <div className="relative z-10 h-full flex items-center">
         {/* 3D Scene - left side, desktop only */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 1.8, duration: 1, ease: 'easeOut' }}
-          className="hidden lg:block lg:w-2/5 h-[70vh] relative"
-        >
-          <Suspense fallback={null}>
-            <HeroScene isDarkMode={isDarkMode} />
-          </Suspense>
-        </motion.div>
+        {!isSmall && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 1.8, duration: 1, ease: 'easeOut' }}
+            className="hidden lg:block lg:w-2/5 h-[70vh] relative"
+          >
+            <Suspense fallback={null}>
+              <HeroScene isDarkMode={isDarkMode} />
+            </Suspense>
+          </motion.div>
+        )}
 
         {/* Right side with text */}
         <div className="w-full lg:w-3/5 flex items-center justify-center p-4 sm:p-8">

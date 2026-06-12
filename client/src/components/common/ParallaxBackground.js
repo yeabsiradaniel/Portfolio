@@ -34,8 +34,11 @@ const ParallaxLayer = ({ dark, light, scrollSpeed, mouseSpeed, zIndex, isDarkMod
   const rawScrollY = useTransform(scrollY, [0, 800], [0, -scrollSpeed * 300]);
   const y = useSpring(rawScrollY, scrollSpring);
 
-  const rawMouseX = useTransform(mouseX, (v) => -v * mouseSpeed * 60);
-  const rawMouseY = useTransform(mouseY, (v) => -v * mouseSpeed * 30);
+  // tilt input on phones is subtler than a mouse, so amplify it
+  const fx = isMobile() ? 110 : 60;
+  const fy = isMobile() ? 55 : 30;
+  const rawMouseX = useTransform(mouseX, (v) => -v * mouseSpeed * fx);
+  const rawMouseY = useTransform(mouseY, (v) => -v * mouseSpeed * fy);
   const mx = useSpring(rawMouseX, mouseSpring);
   const my = useSpring(rawMouseY, mouseSpring);
 
@@ -202,7 +205,17 @@ const ParallaxBackground = () => {
   const mouseY = useSpring(0, mouseSpring);
 
   useEffect(() => {
-    if (isMobile()) return;
+    if (isMobile()) {
+      // phones: drive the parallax from the gyroscope instead of the mouse.
+      // Silently inactive on iOS until motion access is granted.
+      const handleOrientation = (e) => {
+        if (e.gamma == null || e.beta == null) return;
+        mouseX.set(Math.max(-1, Math.min(1, e.gamma / 25)));
+        mouseY.set(Math.max(-1, Math.min(1, (e.beta - 40) / 25)));
+      };
+      window.addEventListener('deviceorientation', handleOrientation, true);
+      return () => window.removeEventListener('deviceorientation', handleOrientation, true);
+    }
     const handleMouse = (e) => {
       mouseX.set((e.clientX / window.innerWidth - 0.5) * 2);
       mouseY.set((e.clientY / window.innerHeight - 0.5) * 2);
