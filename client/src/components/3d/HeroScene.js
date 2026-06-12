@@ -4,10 +4,8 @@ import * as THREE from 'three';
 
 const mouse = { x: 0, y: 0 };
 
-const COUNT = 900;
 const HOLD = 4.5; // seconds a shape stays fully formed
 const CYCLE = HOLD + 1.8; // hold + morph window before the next target kicks in
-const MAX_LINES = 650;
 
 /* ---------------------------------- shapes --------------------------------- */
 
@@ -179,7 +177,7 @@ function makeSpriteTexture() {
 
 // Nearest-neighbor pairs computed once from the sphere layout. The same index
 // pairs are reused during morphs so the lines stretch and deform with the cloud.
-function makeLinePairs(spherePts, count) {
+function makeLinePairs(spherePts, count, maxLines) {
   const degree = new Uint8Array(count);
   const pairs = [];
   const seen = new Set();
@@ -215,7 +213,7 @@ function makeLinePairs(spherePts, count) {
       degree[i]++;
       degree[j]++;
       pairs.push([i, j]);
-      if (pairs.length >= MAX_LINES) return pairs;
+      if (pairs.length >= maxLines) return pairs;
     }
   }
   return pairs;
@@ -223,18 +221,18 @@ function makeLinePairs(spherePts, count) {
 
 /* ------------------------------- constellation ----------------------------- */
 
-const Constellation = ({ accentColor, wireColor, reducedMotion }) => {
+const Constellation = ({ accentColor, wireColor, reducedMotion, count, maxLines }) => {
   const groupRef = useRef();
   const pointsGeoRef = useRef();
   const linesGeoRef = useRef();
   const { viewport } = useThree();
 
   const shapes = useMemo(
-    () => [makeSphere(COUNT, 1.85), makePhone(COUNT), makeNebula(COUNT)],
-    []
+    () => [makeSphere(count, 1.85), makePhone(count), makeNebula(count)],
+    [count]
   );
 
-  const pairs = useMemo(() => makeLinePairs(shapes[0], COUNT), [shapes]);
+  const pairs = useMemo(() => makeLinePairs(shapes[0], count, maxLines), [shapes, count, maxLines]);
 
   const sprite = useMemo(() => makeSpriteTexture(), []);
 
@@ -242,23 +240,23 @@ const Constellation = ({ accentColor, wireColor, reducedMotion }) => {
   const sim = useMemo(() => {
     return {
       positions: shapes[0].slice(), // logical positions chasing the target
-      display: new Float32Array(COUNT * 3), // positions + repulsion + breathing
-      offsets: new Float32Array(COUNT * 3), // decaying mouse repulsion
-      lambdas: Float32Array.from({ length: COUNT }, () => 1.2 + Math.random() * 2),
-      sizes: Float32Array.from({ length: COUNT }, () => 0.5 + Math.random()),
+      display: new Float32Array(count * 3), // positions + repulsion + breathing
+      offsets: new Float32Array(count * 3), // decaying mouse repulsion
+      lambdas: Float32Array.from({ length: count }, () => 1.2 + Math.random() * 2),
+      sizes: Float32Array.from({ length: count }, () => 0.5 + Math.random()),
       linePositions: new Float32Array(pairs.length * 6),
       tmp: new THREE.Vector3(),
       yAxis: new THREE.Vector3(0, 1, 0),
     };
-  }, [shapes, pairs]);
+  }, [shapes, pairs, count]);
 
   // per-particle colors blending the two theme colors
   const colors = useMemo(() => {
     const a = new THREE.Color(accentColor);
     const b = new THREE.Color(wireColor);
-    const arr = new Float32Array(COUNT * 3);
+    const arr = new Float32Array(count * 3);
     const c = new THREE.Color();
-    for (let i = 0; i < COUNT; i++) {
+    for (let i = 0; i < count; i++) {
       // deterministic mix so colors do not flicker between theme switches
       const t = (Math.sin(i * 12.9898) * 43758.5453) % 1;
       c.copy(a).lerp(b, Math.abs(t) * 0.85);
@@ -267,7 +265,7 @@ const Constellation = ({ accentColor, wireColor, reducedMotion }) => {
       arr[i * 3 + 2] = c.b;
     }
     return arr;
-  }, [accentColor, wireColor]);
+  }, [accentColor, wireColor, count]);
 
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.05);
@@ -301,7 +299,7 @@ const Constellation = ({ accentColor, wireColor, reducedMotion }) => {
 
     const breathe = 1 + Math.sin(t * 0.8) * 0.025;
 
-    for (let i = 0; i < COUNT; i++) {
+    for (let i = 0; i < count; i++) {
       const ix = i * 3;
       // organic swarm: each particle chases the target at its own speed
       const k = 1 - Math.exp(-lambdas[i] * dt);
@@ -350,7 +348,8 @@ const Constellation = ({ accentColor, wireColor, reducedMotion }) => {
     }
   });
 
-  const scale = viewport.width < 6 ? 0.8 : 1;
+  // shrink to fit narrow viewports, with a floor so phones still get presence
+  const scale = Math.max(0.55, Math.min(1, viewport.width / 6));
 
   return (
     <group ref={groupRef} scale={scale}>
@@ -388,7 +387,7 @@ const Constellation = ({ accentColor, wireColor, reducedMotion }) => {
 
 /* ---------------------------------- canvas --------------------------------- */
 
-const HeroScene = ({ isDarkMode }) => {
+const HeroScene = ({ isDarkMode, mobile = false }) => {
   const accentColor = isDarkMode ? '#2dd4bf' : '#3b82f6';
   const wireColor = isDarkMode ? '#34d399' : '#a855f7';
 
@@ -404,15 +403,38 @@ const HeroScene = ({ isDarkMode }) => {
       mouse.x = (e.clientX / window.innerWidth - 0.5) * 2;
       mouse.y = (e.clientY / window.innerHeight - 0.5) * 2;
     };
+    const handleTouch = (e) => {
+      const t = e.touches[0];
+      if (!t) return;
+      mouse.x = (t.clientX / window.innerWidth - 0.5) * 2;
+      mouse.y = (t.clientY / window.innerHeight - 0.5) * 2;
+    };
+    // gyroscope tilt: gamma is left/right roll, beta is front/back pitch.
+    // Beta is offset by the typical in-hand holding angle. No-ops on iOS
+    // until the page is granted motion access, which is fine.
+    const handleOrientation = (e) => {
+      if (e.gamma == null || e.beta == null) return;
+      mouse.x = Math.max(-1, Math.min(1, e.gamma / 25));
+      mouse.y = Math.max(-1, Math.min(1, (e.beta - 40) / 25));
+    };
+
     window.addEventListener('mousemove', handleMouse, { passive: true });
-    return () => window.removeEventListener('mousemove', handleMouse);
-  }, []);
+    if (mobile) {
+      window.addEventListener('touchmove', handleTouch, { passive: true });
+      window.addEventListener('deviceorientation', handleOrientation, true);
+    }
+    return () => {
+      window.removeEventListener('mousemove', handleMouse);
+      window.removeEventListener('touchmove', handleTouch);
+      window.removeEventListener('deviceorientation', handleOrientation, true);
+    };
+  }, [mobile]);
 
   return (
     <div className="w-full h-full" style={{ minHeight: '300px' }}>
       <Canvas
         camera={{ position: [0, 0, 7], fov: 45 }}
-        dpr={[1, 1.5]}
+        dpr={mobile ? [1, 1.25] : [1, 1.5]}
         gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
         style={{ background: 'transparent' }}
       >
@@ -420,6 +442,8 @@ const HeroScene = ({ isDarkMode }) => {
           accentColor={accentColor}
           wireColor={wireColor}
           reducedMotion={reducedMotion}
+          count={mobile ? 380 : 900}
+          maxLines={mobile ? 240 : 650}
         />
       </Canvas>
     </div>
