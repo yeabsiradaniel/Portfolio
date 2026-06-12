@@ -12,7 +12,6 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Track scroll position for frosted glass effect
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -26,7 +25,6 @@ const Navbar = () => {
     { title: 'Contact', id: 'contact' },
   ];
 
-  // Track which section is in view for active link highlighting
   useEffect(() => {
     if (location.pathname !== '/') return;
 
@@ -51,7 +49,6 @@ const Navbar = () => {
   }, [location.pathname]);
 
   const scrollToSection = (id) => {
-    // If on an admin page, navigate home first then scroll
     if (location.pathname !== '/') {
       navigate('/');
       setTimeout(() => {
@@ -75,48 +72,53 @@ const Navbar = () => {
     open: { opacity: 1 },
   };
 
-  // Don't show section nav on admin pages
   const isAdminPage = location.pathname.startsWith('/admin');
 
   return (
     <>
-      <nav className={`sticky top-0 z-50 border-b border-gray-200/20 dark:border-gray-700/20 transition-all duration-500 ease-in-out ${
+      <nav className={`sticky top-0 z-50 transition-all duration-500 ease-in-out ${
         scrolled
-          ? 'bg-[#BBA1C3]/70 dark:bg-[#455E3D]/70 backdrop-blur-md shadow-lg'
-          : 'bg-transparent'
+          ? 'bg-[#BBA1C3]/80 dark:bg-[#455E3D]/80 backdrop-blur-xl shadow-lg shadow-black/5 dark:shadow-black/20 border-b border-white/10'
+          : 'bg-transparent border-b border-transparent'
       }`}>
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
             <div className="flex items-center">
               <button onClick={() => scrollToSection('home')} className="cursor-pointer">
                 <img src={logo} alt="MyPortfolio Logo" className="h-14" />
               </button>
             </div>
 
-            {/* Desktop Navigation Links */}
             {!isAdminPage && (
-              <div className="hidden md:flex items-center space-x-8">
+              <div className="hidden md:flex items-center space-x-1">
                 {navLinks.map((link) => (
                   <button
                     key={link.id}
                     onClick={() => scrollToSection(link.id)}
-                    className={`text-lg font-medium transition-colors duration-300 ${
-                      activeSection === link.id ? 'text-accent' : 'hover:text-accent'
+                    className={`relative px-4 py-2 text-sm font-medium font-sans transition-colors duration-300 rounded-lg ${
+                      activeSection === link.id
+                        ? 'text-accent'
+                        : 'text-gray-700 dark:text-gray-300 hover:text-accent hover:bg-accent/5'
                     }`}
                   >
                     {link.title}
+                    {activeSection === link.id && (
+                      <motion.div
+                        layoutId="nav-indicator"
+                        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-5 h-0.5 bg-accent rounded-full"
+                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                      />
+                    )}
                   </button>
                 ))}
               </div>
             )}
 
-            {/* Right side: Theme Toggle and Mobile Menu Button */}
-            <div className="flex items-center">
+            <div className="flex items-center gap-2">
               <ThemeToggle />
               {!isAdminPage && (
-                <div className="md:hidden ml-4">
-                  <button onClick={() => setIsOpen(!isOpen)} className="focus:outline-none">
+                <div className="md:hidden">
+                  <button onClick={() => setIsOpen(!isOpen)} className="p-2 rounded-lg hover:bg-accent/10 transition-colors duration-200 focus:outline-none">
                     {isOpen ? (
                       <XMarkIcon className="h-6 w-6" />
                     ) : (
@@ -130,11 +132,9 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Mobile Menu — Slide-in Panel */}
       <AnimatePresence>
         {isOpen && (
           <>
-            {/* Backdrop */}
             <motion.div
               initial="closed"
               animate="open"
@@ -142,23 +142,22 @@ const Navbar = () => {
               variants={backdropVariants}
               transition={{ duration: 0.3 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden"
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden"
             />
-            {/* Panel */}
             <motion.div
               initial="closed"
               animate="open"
               exit="closed"
               variants={panelVariants}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="fixed top-0 right-0 w-3/4 max-w-xs h-full bg-[#BBA1C3] dark:bg-[#455E3D] z-50 md:hidden shadow-2xl"
+              className="fixed top-0 right-0 w-3/4 max-w-xs h-full bg-[#BBA1C3]/95 dark:bg-[#455E3D]/95 backdrop-blur-xl z-50 md:hidden shadow-2xl border-l border-white/10"
             >
               <div className="flex justify-end p-4">
-                <button onClick={() => setIsOpen(false)} className="focus:outline-none">
+                <button onClick={() => setIsOpen(false)} className="p-2 rounded-lg hover:bg-accent/10 transition-colors duration-200 focus:outline-none">
                   <XMarkIcon className="h-6 w-6" />
                 </button>
               </div>
-              <div className="flex flex-col items-center pt-12 space-y-8">
+              <div className="flex flex-col items-center pt-8 space-y-2 px-6">
                 {navLinks.map((link, i) => (
                   <motion.button
                     key={link.id}
@@ -166,8 +165,10 @@ const Navbar = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.05 * i }}
                     onClick={() => scrollToSection(link.id)}
-                    className={`text-2xl font-bold transition-colors duration-300 ${
-                      activeSection === link.id ? 'text-accent' : 'hover:text-accent'
+                    className={`w-full text-center py-3 px-4 rounded-xl text-lg font-semibold font-sans transition-all duration-300 ${
+                      activeSection === link.id
+                        ? 'text-accent bg-accent/10'
+                        : 'hover:text-accent hover:bg-accent/5'
                     }`}
                   >
                     {link.title}

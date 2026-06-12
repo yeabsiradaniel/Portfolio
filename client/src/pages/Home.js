@@ -12,34 +12,34 @@ import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const contactDetails = [
   {
-    icon: <EnvelopeIcon className="h-6 w-6 text-accent" />,
+    icon: <EnvelopeIcon className="h-5 w-5 text-accent" />,
     label: 'Email',
     text: 'yeabsirad9@gmail.com',
     href: 'mailto:yeabsirad9@gmail.com',
   },
   {
-    icon: <PhoneIcon className="h-6 w-6 text-accent" />,
+    icon: <PhoneIcon className="h-5 w-5 text-accent" />,
     label: 'Phone',
     text: '+251918472342',
     href: 'tel:+251918472342',
   },
   {
-    icon: <FaGithub className="h-6 w-6 text-accent" />,
+    icon: <FaGithub className="h-5 w-5 text-accent" />,
     label: 'GitHub',
     text: 'yeabsiradaniel',
     href: 'https://github.com/yeabsiradaniel',
   },
   {
-    icon: <FaLinkedin className="h-6 w-6 text-accent" />,
+    icon: <FaLinkedin className="h-5 w-5 text-accent" />,
     label: 'LinkedIn',
     text: 'Yeabsira Daniel',
     href: 'https://www.linkedin.com/in/yeabsira-daniel-3368a5373',
   },
 ];
 
-const GradientDivider = () => (
-  <div className="flex justify-center">
-    <div className="w-3/5 h-px bg-gradient-to-r from-transparent via-accent to-transparent opacity-60" />
+const SectionDivider = () => (
+  <div className="flex justify-center py-2">
+    <div className="w-2/5 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
   </div>
 );
 
@@ -48,12 +48,10 @@ const Home = () => {
 
   return (
     <>
-      {/* Hero Section */}
       <section id="home">
         <Hero />
       </section>
 
-      {/* Sections below hero - overlaps hero bottom slightly for seamless transition */}
       <div className="relative bg-[#BBA1C3] dark:bg-[#455E3D] transition-colors duration-800" style={{ marginTop: '-80px', paddingTop: '80px', zIndex: 1 }}>
 
       {/* About Section */}
@@ -69,44 +67,53 @@ const Home = () => {
         </div>
       </section>
 
-      <GradientDivider />
+      <SectionDivider />
 
       {/* Projects Section */}
       <section id="projects" className="py-16 sm:py-24">
         <div className="container mx-auto px-4">
           <Section>
-            <h2 className="text-4xl md:text-5xl font-heading font-bold text-center mb-12">My Work</h2>
+            <div className="text-center mb-12">
+              <h2 className="text-sm uppercase tracking-widest text-accent font-sans font-semibold mb-2">Portfolio</h2>
+              <h3 className="text-3xl md:text-4xl font-heading font-bold">My Work</h3>
+            </div>
             <ProjectGrid />
           </Section>
         </div>
       </section>
 
-      <GradientDivider />
+      <SectionDivider />
 
       {/* Contact Section */}
       <section id="contact" className="py-16 sm:py-24">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-heading font-bold text-center mb-4">Get In Touch</h2>
-          <p className="text-center text-gray-600 dark:text-gray-400 font-sans mb-8 max-w-xl mx-auto transition-colors duration-300">
-            Available for remote contract work, full-time or part-time. UTC+3 (East Africa Time), overlapping with EU, UK, and Middle East business hours. Typically responds within 4 hours.
-          </p>
-          <div className="max-w-2xl mx-auto mb-12 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+          <div className="text-center mb-10">
+            <h2 className="text-sm uppercase tracking-widest text-accent font-sans font-semibold mb-2">Let's Work Together</h2>
+            <h3 className="text-3xl md:text-4xl font-heading font-bold mb-4">Get In Touch</h3>
+            <p className="text-gray-600 dark:text-gray-400 font-sans max-w-lg mx-auto transition-colors duration-300 text-sm leading-relaxed">
+              Available for remote contract work. Based in Addis Ababa, Ethiopia (UTC+3), overlapping with EU, UK, and Middle East business hours.
+            </p>
+          </div>
+
+          {/* Contact cards */}
+          <div className="max-w-2xl mx-auto mb-12 grid grid-cols-2 sm:grid-cols-4 gap-3">
             {contactDetails.map((detail, index) => (
               <a
                 key={index}
                 href={detail.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex flex-col items-center p-3 sm:p-5 rounded-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+                className="group flex flex-col items-center p-4 rounded-2xl glass-card hover:-translate-y-1 transition-all duration-300"
               >
-                <div className="w-12 h-12 rounded-full bg-accent/10 dark:bg-accent/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+                <div className="w-10 h-10 rounded-xl bg-accent/10 dark:bg-accent/15 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
                   {detail.icon}
                 </div>
-                <span className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1 font-sans">{detail.label}</span>
-                <span className="font-sans text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 text-center truncate w-full">{detail.text}</span>
+                <span className="text-[10px] uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-1 font-sans">{detail.label}</span>
+                <span className="font-sans text-xs font-medium text-gray-700 dark:text-gray-300 text-center truncate w-full">{detail.text}</span>
               </a>
             ))}
           </div>
+
           <ContactForm />
         </div>
       </section>

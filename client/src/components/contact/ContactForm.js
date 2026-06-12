@@ -1,119 +1,133 @@
 import React, { useState } from 'react';
-import axios from 'axios'; // For making HTTP requests
-import { motion } from 'framer-motion'; // For animations
+import axios from 'axios';
+import { motion } from 'framer-motion';
 
-/**
- * The ContactForm component.
- * Provides a form for users to send a message.
- * Handles form state, submission, and displays status messages.
- */
 const ContactForm = () => {
-  // State to manage the form's input data (name, email, message)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     message: '',
   });
-  // State to display the status of the form submission (e.g., "Sending...", "Message sent")
   const [status, setStatus] = useState('');
+  const [sending, setSending] = useState(false);
 
-  /**
-   * Handles changes in the form input fields.
-   * Updates the formData state with the new value for the corresponding field.
-   * @param {object} e - The event object from the input or textarea.
-   */
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  /**
-   * Handles the form submission.
-   * Sends the form data to the backend API.
-   * @param {object} e - The form submission event object.
-   */
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent the default browser refresh on form submission
-    setStatus('Sending...'); // Update status to show the form is being submitted
+    e.preventDefault();
+    setStatus('');
+    setSending(true);
     try {
-      // Send a POST request to the '/api/contact' endpoint with the form data
       await axios.post('/api/contact', formData);
-      setStatus('Message sent successfully!'); // Update status on success
-      // Clear the form fields after successful submission
+      setStatus('success');
       setFormData({ name: '', email: '', message: '' });
     } catch (error) {
-      setStatus('Failed to send message. Please try again.'); // Update status on failure
-      console.error('Error submitting form:', error); // Log the error for debugging
+      setStatus('error');
+      console.error('Error submitting form:', error);
+    } finally {
+      setSending(false);
     }
   };
 
+  const inputClasses = "w-full px-4 py-3 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 rounded-xl font-sans text-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent transition-all duration-300";
+
   return (
-    // Animated container for the form
     <motion.div
       initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
       className="max-w-xl mx-auto"
     >
-      <form onSubmit={handleSubmit} className="space-y-6 font-sans">
-        {/* Name Input */}
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium">
-            Name
-          </label>
-          <input
-            type="text"
-            name="name"
-            id="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-accent focus:border-accent transition-colors duration-300"
-          />
+      <form onSubmit={handleSubmit} className="space-y-5 font-sans">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div>
+            <label htmlFor="name" className="block text-xs uppercase tracking-widest font-semibold text-gray-500 dark:text-gray-400 mb-2">
+              Name
+            </label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              placeholder="Your name"
+              className={inputClasses}
+            />
+          </div>
+          <div>
+            <label htmlFor="email" className="block text-xs uppercase tracking-widest font-semibold text-gray-500 dark:text-gray-400 mb-2">
+              Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              placeholder="you@example.com"
+              className={inputClasses}
+            />
+          </div>
         </div>
-        {/* Email Input */}
+
         <div>
-          <label htmlFor="email" className="block text-sm font-medium">
-            Email
-          </label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-accent focus:border-accent transition-colors duration-300"
-          />
-        </div>
-        {/* Message Textarea */}
-        <div>
-          <label htmlFor="message" className="block text-sm font-medium">
+          <label htmlFor="message" className="block text-xs uppercase tracking-widest font-semibold text-gray-500 dark:text-gray-400 mb-2">
             Message
           </label>
           <textarea
             name="message"
             id="message"
-            rows="4"
+            rows="5"
             value={formData.message}
             onChange={handleChange}
             required
-            className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-accent focus:border-accent transition-colors duration-300"
+            placeholder="Tell me about your project..."
+            className={`${inputClasses} resize-none`}
           ></textarea>
         </div>
-        {/* Submit Button */}
-        <div>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            type="submit"
-            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-accent hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent"
-          >
-            Send Message
-          </motion.button>
-        </div>
+
+        <motion.button
+          whileHover={{ scale: 1.02, y: -2 }}
+          whileTap={{ scale: 0.98 }}
+          type="submit"
+          disabled={sending}
+          className="w-full py-3.5 px-6 bg-accent hover:bg-accent-hover text-white rounded-xl font-semibold text-sm transition-all duration-300 glow-accent disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        >
+          {sending ? (
+            <>
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              Sending...
+            </>
+          ) : (
+            'Send Message'
+          )}
+        </motion.button>
       </form>
-      {/* Display the submission status message */}
-      {status && <p className="mt-4 text-center font-sans">{status}</p>}
+
+      {/* Status messages */}
+      {status === 'success' && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-center text-sm font-sans"
+        >
+          Message sent successfully! I'll get back to you soon.
+        </motion.div>
+      )}
+      {status === 'error' && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-700 dark:text-red-400 text-center text-sm font-sans"
+        >
+          Failed to send message. Please try again or email me directly.
+        </motion.div>
+      )}
     </motion.div>
   );
 };

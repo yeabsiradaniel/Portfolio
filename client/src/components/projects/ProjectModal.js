@@ -1,21 +1,9 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion'; // For animations
+import { motion, AnimatePresence } from 'framer-motion';
+import { XMarkIcon } from '@heroicons/react/24/solid';
+import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 
-/**
- * The ProjectModal component.
- * Displays the full details of a selected project in a modal overlay.
- * Uses Framer Motion's shared layout animations for a smooth transition from the card.
- *
- * @param {object} project - The project data to display in the modal.
- * @param {function} closeModal - The function to call to close the modal.
- */
 const ProjectModal = ({ project, closeModal }) => {
-
-  /**
-   * Handles clicks on the modal's background overlay.
-   * Closes the modal only if the click is on the overlay itself, not on its children (the modal content).
-   * @param {object} e - The click event object.
-   */
   const handleBackgroundClick = (e) => {
     if (e.target === e.currentTarget) {
       closeModal();
@@ -23,67 +11,78 @@ const ProjectModal = ({ project, closeModal }) => {
   };
 
   return (
-    // AnimatePresence handles the enter and exit animations of the modal.
     <AnimatePresence>
-      {/* The modal overlay */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
         onClick={handleBackgroundClick}
       >
-        {/* The modal content container. The `layoutId` matches the one on the ProjectCard. */}
         <motion.div
           layoutId={`card-container-${project._id}`}
-          className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-2xl max-w-3xl w-full transition-colors duration-300"
+          className="bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto transition-colors duration-300 border border-gray-200/20 dark:border-gray-700/20"
         >
-          {/* Project Image */}
-          <motion.img
-            layoutId={`image-${project._id}`} // Shared layout ID
-            src={project.imageUrl || 'https://via.placeholder.com/400x250'}
-            alt={project.title}
-            className="w-full h-80 object-cover"
-          />
-          {/* Modal Text Content */}
-          <div className="p-8">
-            {/* Project Title */}
+          {/* Image with close button */}
+          <div className="relative">
+            <motion.img
+              layoutId={`image-${project._id}`}
+              src={project.imageUrl || 'https://via.placeholder.com/400x250'}
+              alt={project.title}
+              className="w-full h-64 sm:h-80 object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+            <button
+              onClick={closeModal}
+              className="absolute top-4 right-4 p-2 rounded-full bg-black/30 backdrop-blur-sm text-white hover:bg-black/50 transition-colors duration-200"
+            >
+              <XMarkIcon className="h-5 w-5" />
+            </button>
+          </div>
+
+          {/* Content */}
+          <div className="p-6 sm:p-8">
             <motion.h2
-              layoutId={`title-${project._id}`} // Shared layout ID
-              className="text-3xl font-bold mb-4"
+              layoutId={`title-${project._id}`}
+              className="text-2xl sm:text-3xl font-heading font-bold mb-3"
             >
               {project.title}
             </motion.h2>
-            {/* Full Project Description */}
+
             <motion.p
-              layoutId={`description-${project._id}`} // Shared layout ID
-              className="text-gray-600 dark:text-gray-400 mb-6 transition-colors duration-300"
+              layoutId={`description-${project._id}`}
+              className="text-gray-600 dark:text-gray-400 font-sans leading-relaxed mb-6 transition-colors duration-300"
             >
               {project.description}
             </motion.p>
-            {/* Tech Stack Section */}
+
+            {/* Tech Stack */}
             <div className="mb-6">
-              <h3 className="text-xl font-semibold mb-2">Tech Stack</h3>
+              <h3 className="text-sm uppercase tracking-widest text-accent font-sans font-semibold mb-3">Tech Stack</h3>
               <div className="flex flex-wrap gap-2">
                 {project.techStack.map((tech, index) => (
-                  <span key={index} className="bg-accent/10 text-accent text-sm font-medium mr-2 px-2.5 py-0.5 rounded transition-colors duration-300">
+                  <span
+                    key={index}
+                    className="px-3 py-1.5 text-xs font-sans font-medium rounded-lg bg-accent/10 dark:bg-accent/15 text-accent border border-accent/20 transition-colors duration-300"
+                  >
                     {tech}
                   </span>
                 ))}
               </div>
             </div>
-            {/* Links Section (Live Demo, GitHub) */}
-            <div className="flex justify-end gap-4">
+
+            {/* Links */}
+            <div className="flex flex-wrap gap-3 pt-4 border-t border-gray-200/50 dark:border-gray-700/50">
               {project.liveLink && (
                 <a
                   href={project.liveLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  // Stop propagation to prevent the modal from closing when a link is clicked
                   onPointerDown={(e) => e.stopPropagation()}
                   onClick={(e) => e.stopPropagation()}
-                  className="text-accent hover:underline"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-accent hover:bg-accent-hover text-white rounded-xl font-sans font-medium text-sm transition-colors duration-200"
                 >
+                  <FaExternalLinkAlt className="h-3.5 w-3.5" />
                   Live Demo
                 </a>
               )}
@@ -94,9 +93,10 @@ const ProjectModal = ({ project, closeModal }) => {
                   rel="noopener noreferrer"
                   onPointerDown={(e) => e.stopPropagation()}
                   onClick={(e) => e.stopPropagation()}
-                  className="text-accent hover:underline"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-300 dark:border-gray-600 hover:border-accent hover:text-accent rounded-xl font-sans font-medium text-sm transition-all duration-200"
                 >
-                  GitHub
+                  <FaGithub className="h-4 w-4" />
+                  Source Code
                 </a>
               )}
             </div>
