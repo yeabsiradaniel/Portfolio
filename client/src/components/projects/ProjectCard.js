@@ -27,6 +27,7 @@ const ProjectCard = ({ project, openModal, index }) => {
       onClick={() => openModal(project)}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      data-cursor="View"
       className="cursor-pointer rounded-2xl overflow-hidden glass-card group"
       style={{
         rotateX,

@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { motion } from 'framer-motion';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { EnvelopeIcon } from '@heroicons/react/24/solid';
 import ParallaxBackground from '../common/ParallaxBackground';
 import FlipWords from '../common/FlipWords';
+import Magnetic from '../common/Magnetic';
+import { useTheme } from '../../hooks/useTheme';
+import { scrollToId } from '../../lib/scroll';
+
+const HeroScene = lazy(() => import('../3d/HeroScene'));
 
 const socialLinks = [
   { icon: <FaGithub className="h-5 w-5" />, href: 'https://github.com/yeabsiradaniel', label: 'GitHub' },
@@ -12,10 +17,10 @@ const socialLinks = [
 ];
 
 const Hero = () => {
-  const scrollToSection = (id) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  };
+  const { theme } = useTheme();
+  const isDarkMode = theme === 'dark';
+
+  const scrollToSection = (id) => scrollToId(id);
 
   return (
     <div
@@ -23,12 +28,6 @@ const Hero = () => {
       style={{ marginTop: '-64px', paddingTop: '64px' }}
     >
       <ParallaxBackground />
-
-      {/* Decorative floating orbs */}
-      <div className="absolute inset-0 z-[5] pointer-events-none overflow-hidden">
-        <div className="absolute top-1/4 left-[10%] w-64 h-64 rounded-full bg-accent/10 blur-3xl animate-float" />
-        <div className="absolute bottom-1/3 right-[15%] w-48 h-48 rounded-full bg-purple-500/10 dark:bg-teal-500/10 blur-3xl animate-float-delayed" />
-      </div>
 
       {/* Social links */}
       <motion.div
@@ -38,7 +37,7 @@ const Hero = () => {
         className="hidden lg:flex absolute left-8 top-1/2 -translate-y-1/2 z-20 flex-col items-center gap-4"
       >
         <div className="w-px h-16 bg-gradient-to-b from-transparent via-gray-900/30 dark:via-white/30 to-transparent" />
-        {socialLinks.map((link, i) => (
+        {socialLinks.map((link) => (
           <motion.a
             key={link.label}
             href={link.href}
@@ -82,16 +81,27 @@ const Hero = () => {
 
       {/* Foreground Content */}
       <div className="relative z-10 h-full flex items-center">
-        <div className="hidden lg:block lg:w-1/4"></div>
+        {/* 3D Scene - left side, desktop only */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 1.8, duration: 1, ease: 'easeOut' }}
+          className="hidden lg:block lg:w-2/5 h-[70vh] relative"
+        >
+          <Suspense fallback={null}>
+            <HeroScene isDarkMode={isDarkMode} />
+          </Suspense>
+        </motion.div>
 
-        <div className="w-full lg:w-3/4 flex items-center justify-center p-4 sm:p-8">
-          <div className="max-w-4xl w-full text-center lg:text-right">
+        {/* Right side with text */}
+        <div className="w-full lg:w-3/5 flex items-center justify-center p-4 sm:p-8">
+          <div className="max-w-2xl w-full text-center lg:text-left">
             {/* Availability badge */}
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-6 lg:ml-auto"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-6"
             >
               <span className="relative flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -106,9 +116,9 @@ const Hero = () => {
               transition={{ type: 'spring', stiffness: 100, damping: 10, delay: 0.3 }}
             >
               <h1
-                className="font-heading font-bold mb-4 text-gradient transition-colors duration-300"
+                className="font-heading font-bold mb-4 text-gradient"
                 style={{
-                  fontSize: 'clamp(2.5rem, 8vw, 7rem)',
+                  fontSize: 'clamp(2.5rem, 7vw, 6rem)',
                   lineHeight: '1.05',
                 }}
               >
@@ -124,7 +134,7 @@ const Hero = () => {
               <h2
                 className="font-heading font-semibold mb-6 text-gray-800 dark:text-gray-100"
                 style={{
-                  fontSize: 'clamp(1.15rem, 3.5vw, 2rem)',
+                  fontSize: 'clamp(1.15rem, 3vw, 1.75rem)',
                   textShadow: 'var(--hero-shadow-sm)',
                 }}
               >
@@ -138,7 +148,7 @@ const Hero = () => {
               transition={{ type: 'spring', stiffness: 100, damping: 10, delay: 0.9 }}
             >
               <p
-                className="text-base lg:text-lg text-gray-800/90 dark:text-gray-200/90 mb-10 font-sans max-w-2xl mx-auto lg:ml-auto lg:mr-0 transition-colors duration-300 leading-relaxed"
+                className="text-base lg:text-lg text-gray-800/90 dark:text-gray-200/90 mb-10 font-sans max-w-xl mx-auto lg:mx-0 transition-colors duration-300 leading-relaxed"
                 style={{ textShadow: 'var(--hero-shadow-sm)' }}
               >
                 Flutter mobile developer and full-stack engineer with production apps on Google Play Store. I build cross-platform mobile apps, REST APIs, and web applications for clients and companies.
@@ -149,24 +159,47 @@ const Hero = () => {
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ type: 'spring', stiffness: 100, damping: 10, delay: 1.2 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-end"
+              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
             >
-              <motion.button
-                onClick={() => scrollToSection('projects')}
-                whileHover={{ scale: 1.03, y: -2 }}
-                whileTap={{ scale: 0.97 }}
-                className="relative bg-accent hover:bg-accent-hover text-white font-bold py-4 px-10 rounded-full text-lg transition-all duration-300 font-sans glow-accent"
-              >
-                View My Work
-              </motion.button>
-              <motion.button
-                onClick={() => scrollToSection('contact')}
-                whileHover={{ scale: 1.03, y: -2 }}
-                whileTap={{ scale: 0.97 }}
-                className="py-4 px-10 rounded-full text-lg font-bold font-sans border-2 border-gray-900/20 dark:border-white/20 hover:border-accent hover:text-accent transition-all duration-300 text-gray-800 dark:text-gray-200"
-              >
-                Contact Me
-              </motion.button>
+              <Magnetic strength={0.25}>
+                <motion.button
+                  onClick={() => scrollToSection('projects')}
+                  whileTap={{ scale: 0.97 }}
+                  className="relative bg-accent hover:bg-accent-hover text-white font-bold py-4 px-10 rounded-full text-lg transition-colors duration-300 font-sans glow-accent w-full sm:w-auto"
+                >
+                  View My Work
+                </motion.button>
+              </Magnetic>
+              <Magnetic strength={0.25}>
+                <motion.button
+                  onClick={() => scrollToSection('contact')}
+                  whileTap={{ scale: 0.97 }}
+                  className="py-4 px-10 rounded-full text-lg font-bold font-sans border-2 border-gray-900/20 dark:border-white/20 hover:border-accent hover:text-accent transition-colors duration-300 text-gray-800 dark:text-gray-200 w-full sm:w-auto"
+                >
+                  Contact Me
+                </motion.button>
+              </Magnetic>
+            </motion.div>
+
+            {/* Mobile social links */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.5, duration: 0.6 }}
+              className="flex lg:hidden justify-center gap-3 mt-8"
+            >
+              {socialLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={link.label}
+                  className="p-3 rounded-xl glass-card text-gray-800 dark:text-gray-200 hover:text-accent transition-colors duration-300"
+                >
+                  {link.icon}
+                </a>
+              ))}
             </motion.div>
           </div>
         </div>
