@@ -1,19 +1,18 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
-// An array of objects representing events in my professional journey.
 const timelineData = [
   {
     year: '2026',
     title: 'Flutter Developer',
     company: 'ShegerWalk (NDA, Play Store Beta)',
-    description: 'Building a gamified step-tracking app for a client using Flutter, Django, PostgreSQL, and FCM. Features native pedometer integration, GPS-mapped walks, and milestone challenges. Deploying to Play Store.',
+    description: 'Building a gamified step-tracking app for a client using Flutter, Django, PostgreSQL, and FCM. Features native pedometer integration, GPS-mapped walks, and milestone challenges.',
   },
   {
     year: '2025',
     title: 'Flutter Developer',
     company: 'BudgetSMS, Expense Tracker',
-    description: 'Built a personal finance app that parses bank SMS notifications from multiple Ethiopian banks, automatically categorizes transactions, and enforces a 50/30/20 budget split with daily spending limits.',
+    description: 'Built a personal finance app that parses bank SMS notifications from multiple Ethiopian banks, automatically categorizes transactions, and enforces a 50/30/20 budget split.',
   },
   {
     year: '2025',
@@ -25,13 +24,13 @@ const timelineData = [
     year: '2025',
     title: 'Flutter Developer',
     company: 'TaskFlow, Task Management App',
-    description: 'Developed an offline-first task manager with Firestore cloud sync, BLoC state management, Firebase Auth, color-coded categories, and scheduled notifications. Open source on GitHub.',
+    description: 'Developed an offline-first task manager with Firestore cloud sync, BLoC state management, Firebase Auth, color-coded categories, and scheduled notifications.',
   },
   {
     year: '2024',
     title: 'Full-Stack Developer',
     company: 'Freelance Client Projects',
-    description: 'Delivered mobile and web solutions for local businesses including a restaurant ordering system and an inventory management tool using Flutter, Node.js, Express, and MongoDB.',
+    description: 'Delivered mobile and web solutions for local businesses including a restaurant ordering system and an inventory management tool using Flutter, Node.js, and MongoDB.',
   },
   {
     year: '2024',
@@ -41,10 +40,6 @@ const timelineData = [
   },
 ];
 
-/**
- * The Timeline component.
- * Displays a vertical timeline of my professional experience and projects.
- */
 const Timeline = () => {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -55,66 +50,74 @@ const Timeline = () => {
 
   return (
     <div className="text-center">
-      {/* Section Title */}
-      <h2 className="text-4xl md:text-5xl font-heading font-bold mb-12">My Journey</h2>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+      >
+        <h2 className="text-sm uppercase tracking-widest text-accent font-sans font-semibold mb-2">Experience</h2>
+        <h3 className="text-3xl md:text-4xl font-heading font-bold mb-12">My Journey</h3>
+      </motion.div>
 
-      {/* Timeline container */}
       <div ref={containerRef} className="relative max-w-3xl mx-auto">
         {/* Static background line */}
-        <div className="absolute h-full w-1 bg-gray-300 dark:bg-gray-600 rounded-full opacity-30 transform left-5 md:left-1/2 md:-translate-x-1/2 transition-colors duration-800"></div>
+        <div className="absolute h-full w-0.5 bg-gray-300/40 dark:bg-gray-600/40 rounded-full transform left-5 md:left-1/2 md:-translate-x-1/2 transition-colors duration-800"></div>
         {/* Animated gradient fill line */}
         <motion.div
           style={{ height: lineHeight }}
-          className="absolute w-1 rounded-full transform left-5 md:left-1/2 md:-translate-x-1/2 bg-gradient-to-b from-accent via-purple-500 to-pink-500"
-        />
-        
-        {/* Map through the timeline data to create each timeline item */}
+          className="absolute w-0.5 rounded-full transform left-5 md:left-1/2 md:-translate-x-1/2 bg-gradient-to-b from-accent via-purple-500 to-pink-500 dark:from-accent dark:via-emerald-400 dark:to-cyan-400"
+        >
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-accent blur-sm" />
+        </motion.div>
+
         {timelineData.map((item, index) => (
           <motion.div
             key={index}
-            initial={{ opacity: 0, y: 50 }} // Initial animation state
-            whileInView={{ opacity: 1, y: 0 }} // Animate when the item comes into view
-            viewport={{ amount: 0.5 }} // Trigger animation once when 50% is visible
-            transition={{ duration: 0.5, delay: index * 0.2 }} // Staggered delay for each item
-            // Alternating layout for timeline items (left and right)
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ amount: 0.5 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
             className={`mb-8 flex justify-between items-center w-full md:flex-row ${
               index % 2 === 0 ? 'md:flex-row-reverse' : ''
             }`}
           >
-            {/* --- Mobile Layout --- */}
-            {/* On mobile, content is on the right, and there's a small spacer on the left */}
+            {/* Mobile Layout */}
             <motion.div
               initial={{ scale: 0 }}
               whileInView={{ scale: 1 }}
               viewport={{ once: true }}
               transition={{ type: 'spring', stiffness: 300, damping: 15, delay: 0.1 }}
-              className="md:hidden z-20 flex-shrink-0 flex items-center justify-center bg-accent shadow-xl w-10 h-10 rounded-full"
+              className="md:hidden z-20 flex-shrink-0 flex items-center justify-center bg-accent shadow-lg shadow-accent/25 w-10 h-10 rounded-full"
             >
-              <span className="text-white font-bold text-sm">{item.year}</span>
+              <span className="text-white font-bold text-xs font-sans">{item.year}</span>
             </motion.div>
-            <div className="md:hidden bg-white dark:bg-gray-800 rounded-lg shadow-xl flex-1 ml-3 px-4 py-3 transition-colors duration-800 ease-in-out text-left">
-              <h3 className="font-sans font-bold text-base mb-1">{item.title}</h3>
-              <h4 className="font-sans font-semibold text-sm text-accent mb-1">{item.company}</h4>
-              <p className="font-sans text-xs text-gray-600 dark:text-gray-300 leading-relaxed transition-colors duration-800 ease-in-out">{item.description}</p>
+            <div className="md:hidden glass-card rounded-xl flex-1 ml-3 px-4 py-3 text-left">
+              <h3 className="font-sans font-bold text-sm mb-0.5">{item.title}</h3>
+              <h4 className="font-sans font-semibold text-xs text-accent mb-1">{item.company}</h4>
+              <p className="font-sans text-xs text-gray-600 dark:text-gray-300 leading-relaxed transition-colors duration-300">{item.description}</p>
             </div>
 
-            {/* --- Desktop Layout --- */}
-            {/* On desktop, a spacer pushes content to either side */}
+            {/* Desktop Layout */}
             <div className="hidden md:block w-5/12"></div>
             <motion.div
               initial={{ scale: 0 }}
               whileInView={{ scale: 1 }}
               viewport={{ once: true }}
               transition={{ type: 'spring', stiffness: 300, damping: 15, delay: 0.1 }}
-              className="hidden md:flex z-20 items-center justify-center bg-accent shadow-xl w-16 h-16 rounded-full"
+              className="hidden md:flex z-20 items-center justify-center bg-accent shadow-lg shadow-accent/25 w-14 h-14 rounded-full"
             >
-              <span className="text-white font-bold text-xl">{item.year}</span>
+              <span className="text-white font-bold text-lg font-sans">{item.year}</span>
             </motion.div>
-            <div className="hidden md:block bg-white dark:bg-gray-800 rounded-lg shadow-xl w-5/12 px-6 py-4 transform hover:scale-105 transition-transform duration-300 transition-colors duration-800 ease-in-out text-left">
-              <h3 className="font-sans font-bold text-2xl mb-1">{item.title}</h3>
-              <h4 className="font-sans font-semibold text-lg text-accent mb-2">{item.company}</h4>
-              <p className="font-sans text-base text-gray-600 dark:text-gray-300 leading-relaxed transition-colors duration-800 ease-in-out">{item.description}</p>
-            </div>
+            <motion.div
+              whileHover={{ y: -4, scale: 1.02 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+              className="hidden md:block glass-card rounded-2xl w-5/12 px-6 py-5 text-left cursor-default"
+            >
+              <h3 className="font-sans font-bold text-xl mb-1">{item.title}</h3>
+              <h4 className="font-sans font-semibold text-sm text-accent mb-2">{item.company}</h4>
+              <p className="font-sans text-sm text-gray-600 dark:text-gray-300 leading-relaxed transition-colors duration-300">{item.description}</p>
+            </motion.div>
           </motion.div>
         ))}
       </div>
@@ -122,5 +125,4 @@ const Timeline = () => {
   );
 };
 
-// Export the Timeline component
 export default Timeline;

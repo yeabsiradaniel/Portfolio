@@ -23,3 +23,7 @@ yarn-error.log*
 # OS-generated files
 .DS_Store
 Thumbs.db
+
+/Projects/
+/remote-work-plan/
+Remote Job Platform Analysis for Developers.md
