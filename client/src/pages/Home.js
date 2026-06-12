@@ -9,6 +9,7 @@ import Section from '../components/common/Section';
 import { EnvelopeIcon, PhoneIcon } from '@heroicons/react/24/solid';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import useDocumentTitle from '../hooks/useDocumentTitle';
+import RevealText from '../components/common/RevealText';
 
 const contactDetails = [
   {
@@ -75,7 +76,7 @@ const Home = () => {
           <Section>
             <div className="text-center mb-12">
               <h2 className="text-sm uppercase tracking-widest text-accent font-sans font-semibold mb-2">Portfolio</h2>
-              <h3 className="text-3xl md:text-4xl font-heading font-bold">My Work</h3>
+              <h3 className="text-3xl md:text-4xl font-heading font-bold"><RevealText>Selected Work</RevealText></h3>
             </div>
             <ProjectGrid />
           </Section>
@@ -89,7 +90,7 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-10">
             <h2 className="text-sm uppercase tracking-widest text-accent font-sans font-semibold mb-2">Let's Work Together</h2>
-            <h3 className="text-3xl md:text-4xl font-heading font-bold mb-4">Get In Touch</h3>
+            <h3 className="text-3xl md:text-4xl font-heading font-bold mb-4"><RevealText>Get In Touch</RevealText></h3>
             <p className="text-gray-600 dark:text-gray-400 font-sans max-w-lg mx-auto transition-colors duration-300 text-sm leading-relaxed">
               Available for remote contract work. Based in Addis Ababa, Ethiopia (UTC+3), overlapping with EU, UK, and Middle East business hours.
             </p>

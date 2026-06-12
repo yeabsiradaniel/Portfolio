@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import RevealText from '../common/RevealText';
 
 const stats = [
   { value: '2+', label: 'Years Experience' },
@@ -41,7 +42,7 @@ const AboutMe = () => {
           >
             <h2 className="text-sm uppercase tracking-widest text-accent font-sans font-semibold mb-2">About Me</h2>
             <h3 className="font-heading font-bold mb-6" style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)' }}>
-              Flutter Developer &<br className="hidden sm:inline" /> Full-Stack Engineer
+              <RevealText>Flutter Developer & Full-Stack Engineer</RevealText>
             </h3>
           </motion.div>
 
