@@ -19,8 +19,49 @@
   }
 }
 
-html {
-  scroll-behavior: smooth;
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Custom cursor: hide the native one while ours is active (pointer: fine only) */
+@media (pointer: fine) {
+  .custom-cursor-active,
+  .custom-cursor-active * {
+    cursor: none !important;
+  }
+}
+
+/* Theme toggle circular wipe via the View Transitions API.
+   The default crossfade is disabled; JS animates a clip-path circle
+   on the new snapshot from the click position. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+}
+
+/* While the wipe runs, freeze per-element color transitions so the
+   reveal shows a fully settled theme instead of a mid-transition blur */
+.theme-switching * {
+  transition: none !important;
 }
 
 body {

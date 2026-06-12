@@ -4,6 +4,7 @@ import ThemeToggle from '../common/ThemeToggle';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from '../../assets/logo.svg';
+import { scrollToId } from '../../lib/scroll';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -51,13 +52,9 @@ const Navbar = () => {
   const scrollToSection = (id) => {
     if (location.pathname !== '/') {
       navigate('/');
-      setTimeout(() => {
-        const el = document.getElementById(id);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
+      setTimeout(() => scrollToId(id), 100);
     } else {
-      const el = document.getElementById(id);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
+      scrollToId(id);
     }
     setIsOpen(false);
   };
