@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useMemo } from 'react';
+import React, { useRef, useEffect, useMemo, useCallback } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
@@ -388,6 +388,7 @@ const Constellation = ({ accentColor, wireColor, reducedMotion, count, maxLines 
 /* ---------------------------------- canvas --------------------------------- */
 
 const HeroScene = ({ isDarkMode, mobile = false }) => {
+  const containerRef = useRef(null);
   const accentColor = isDarkMode ? '#2dd4bf' : '#3b82f6';
   const wireColor = isDarkMode ? '#34d399' : '#a855f7';
 
@@ -399,19 +400,24 @@ const HeroScene = ({ isDarkMode, mobile = false }) => {
   );
 
   useEffect(() => {
+    const el = containerRef.current;
     const handleMouse = (e) => {
-      mouse.x = (e.clientX / window.innerWidth - 0.5) * 2;
-      mouse.y = (e.clientY / window.innerHeight - 0.5) * 2;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      mouse.x = Math.max(-1, Math.min(1, (e.clientX - cx) / (rect.width / 2)));
+      mouse.y = Math.max(-1, Math.min(1, (e.clientY - cy) / (rect.height / 2)));
     };
     const handleTouch = (e) => {
       const t = e.touches[0];
-      if (!t) return;
-      mouse.x = (t.clientX / window.innerWidth - 0.5) * 2;
-      mouse.y = (t.clientY / window.innerHeight - 0.5) * 2;
+      if (!t || !el) return;
+      const rect = el.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      mouse.x = Math.max(-1, Math.min(1, (t.clientX - cx) / (rect.width / 2)));
+      mouse.y = Math.max(-1, Math.min(1, (t.clientY - cy) / (rect.height / 2)));
     };
-    // gyroscope tilt: gamma is left/right roll, beta is front/back pitch.
-    // Beta is offset by the typical in-hand holding angle. No-ops on iOS
-    // until the page is granted motion access, which is fine.
     const handleOrientation = (e) => {
       if (e.gamma == null || e.beta == null) return;
       mouse.x = Math.max(-1, Math.min(1, e.gamma / 25));
@@ -431,7 +437,7 @@ const HeroScene = ({ isDarkMode, mobile = false }) => {
   }, [mobile]);
 
   return (
-    <div className="w-full h-full" style={{ minHeight: '300px' }}>
+    <div ref={containerRef} className="w-full h-full" style={{ minHeight: '300px' }}>
       <Canvas
         camera={{ position: [0, 0, 7], fov: 45 }}
         dpr={mobile ? [1, 1.25] : [1, 1.5]}
