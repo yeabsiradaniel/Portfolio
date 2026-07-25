@@ -9,22 +9,22 @@ import useDocumentTitle from '../hooks/useDocumentTitle'; // Custom hook for set
 // An array of objects containing contact details to be displayed on the page.
 const contactDetails = [
   {
-    icon: <EnvelopeIcon className="h-6 w-6 text-blue-500" />,
+    icon: <EnvelopeIcon className="h-6 w-6 text-accent" />,
     text: 'yeabsirad9@gmail.com',
     href: 'mailto:yeabsirad9@gmail.com',
   },
   {
-    icon: <PhoneIcon className="h-6 w-6 text-blue-500" />,
+    icon: <PhoneIcon className="h-6 w-6 text-accent" />,
     text: '+251918472342',
     href: 'tel:+251918472342',
   },
   {
-    icon: <FaGithub className="h-6 w-6 text-blue-500" />,
+    icon: <FaGithub className="h-6 w-6 text-accent" />,
     text: 'GitHub',
     href: 'https://github.com/yeabsiradaniel',
   },
   {
-    icon: <FaLinkedin className="h-6 w-6 text-blue-500" />,
+    icon: <FaLinkedin className="h-6 w-6 text-accent" />,
     text: 'LinkedIn',
     href: 'https://www.linkedin.com/in/yeabsira-daniel-3368a5373',
   },
@@ -51,7 +51,7 @@ const Contact = () => {
       <h1 className="text-4xl font-heading font-bold text-center mb-8">Get In Touch</h1>
       
       {/* Contact Information Box */}
-      <div className="max-w-xl mx-auto mb-12 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md transition-colors duration-300">
+      <div className="max-w-xl mx-auto mb-12 p-6 glass-card rounded-lg shadow-md transition-colors duration-300">
         <h2 className="text-2xl font-heading font-bold text-center mb-6">Contact Information</h2>
         <div className="space-y-4">
           {/* Map through the contactDetails array to render each contact item */}

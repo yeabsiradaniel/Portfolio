@@ -15,6 +15,7 @@ module.exports = {
       colors: {
         accent: 'rgb(var(--color-accent) / <alpha-value>)',
         'accent-hover': 'rgb(var(--color-accent-hover) / <alpha-value>)',
+        'on-accent': 'rgb(var(--color-on-accent) / <alpha-value>)',
       },
       animation: {
         'spin-slow': 'spin 8s linear infinite',

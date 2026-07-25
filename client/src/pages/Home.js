@@ -53,7 +53,7 @@ const Home = () => {
         <Hero />
       </section>
 
-      <div className="relative bg-[#BBA1C3] dark:bg-[#455E3D] transition-colors duration-800" style={{ marginTop: '-80px', paddingTop: '80px', zIndex: 1 }}>
+      <div className="relative transition-colors duration-800" style={{ marginTop: '-80px', paddingTop: '80px', zIndex: 1 }}>
 
       {/* About Section */}
       <section id="about" className="py-16 sm:py-24">

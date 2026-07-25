@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ThemeToggle from '../common/ThemeToggle';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
 import { motion, AnimatePresence } from 'framer-motion';
-import logo from '../../assets/logo.svg';
+import Logo from '../common/Logo';
 import { scrollToId } from '../../lib/scroll';
 
 const Navbar = () => {
@@ -75,14 +75,14 @@ const Navbar = () => {
     <>
       <nav className={`sticky top-0 z-50 transition-all duration-500 ease-in-out ${
         scrolled
-          ? 'bg-[#BBA1C3]/80 dark:bg-[#455E3D]/80 backdrop-blur-xl shadow-lg shadow-black/5 dark:shadow-black/20 border-b border-white/10'
+          ? 'glass-card shadow-lg shadow-black/5 dark:shadow-black/20 border-b border-black/5 dark:border-white/10'
           : 'bg-transparent border-b border-transparent'
       }`}>
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
               <button onClick={() => scrollToSection('home')} className="cursor-pointer">
-                <img src={logo} alt="MyPortfolio Logo" className="h-14" />
+                <Logo className="h-12 w-12 text-accent transition-colors duration-300" />
               </button>
             </div>
 
@@ -102,7 +102,8 @@ const Navbar = () => {
                     {activeSection === link.id && (
                       <motion.div
                         layoutId="nav-indicator"
-                        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-5 h-0.5 bg-accent rounded-full"
+                        className="absolute bottom-0 left-1/2 w-5 h-0.5 bg-accent rounded-full"
+                        style={{ x: '-50%' }}
                         transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                       />
                     )}
@@ -147,7 +148,7 @@ const Navbar = () => {
               exit="closed"
               variants={panelVariants}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="fixed top-0 right-0 w-3/4 max-w-xs h-full bg-[#BBA1C3]/95 dark:bg-[#455E3D]/95 backdrop-blur-xl z-50 md:hidden shadow-2xl border-l border-white/10"
+              className="fixed top-0 right-0 w-3/4 max-w-xs h-full glass-card z-50 md:hidden shadow-2xl border-l border-black/5 dark:border-white/10"
             >
               <div className="flex justify-end p-4">
                 <button onClick={() => setIsOpen(false)} className="p-2 rounded-lg hover:bg-accent/10 transition-colors duration-200 focus:outline-none">

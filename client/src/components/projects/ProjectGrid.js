@@ -27,7 +27,7 @@ const FeaturedProject = ({ project, openModal }) => (
         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent lg:bg-gradient-to-r" />
-      <span className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-sans font-semibold uppercase tracking-wider bg-accent text-white shadow-lg">
+      <span className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-sans font-semibold uppercase tracking-wider bg-accent text-on-accent shadow-lg">
         Featured
       </span>
     </div>
@@ -61,7 +61,7 @@ const FeaturedProject = ({ project, openModal }) => (
       <div className="flex flex-wrap items-center gap-4">
         <button
           onClick={() => openModal(project)}
-          className="px-6 py-3 rounded-full bg-accent hover:bg-accent-hover text-white text-sm font-sans font-bold transition-colors duration-300"
+          className="px-6 py-3 rounded-full bg-accent hover:bg-accent-hover text-on-accent text-sm font-sans font-bold transition-colors duration-300"
         >
           View Case Study
         </button>
