@@ -120,7 +120,7 @@ const CustomCursor = () => {
       >
         <span
           ref={labelRef}
-          className="text-[11px] font-sans font-semibold text-white select-none"
+          className="text-[11px] font-sans font-semibold text-on-accent select-none"
         />
       </div>
     </>

@@ -185,7 +185,7 @@ const AdminDashboard = () => {
             <input type="file" name="image" onChange={onFileChange} className="w-full p-2 border rounded"/>
             {imagePreview && <img src={imagePreview} alt="Preview" className="mt-4 w-full h-auto"/>}
             <div className="flex space-x-4">
-                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">{isEditing ? 'Update' : 'Add'}</button>
+                <button type="submit" className="bg-accent text-on-accent px-4 py-2 rounded">{isEditing ? 'Update' : 'Add'}</button>
                 {isEditing && <button type="button" onClick={clearForm} className="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>}
             </div>
           </form>
@@ -204,7 +204,7 @@ const AdminDashboard = () => {
                 <h3 className="text-xl font-bold">{project.title}</h3>
                 <p>{project.description}</p>
                 <div className="flex space-x-4 mt-4">
-                  <button onClick={() => onEdit(project)} className="text-blue-500">Edit</button>
+                  <button onClick={() => onEdit(project)} className="text-accent">Edit</button>
                   <button onClick={() => onDelete(project._id)} className="text-red-500">Delete</button>
                 </div>
               </motion.div>

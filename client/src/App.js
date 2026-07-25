@@ -6,6 +6,7 @@ import Footer from './components/layout/Footer';
 import AnimatedRoutes from './components/common/AnimatedRoutes';
 import CustomCursor from './components/common/CustomCursor';
 import Preloader from './components/common/Preloader';
+import FluidSphereBackground from './components/3d/FluidSphereBackground';
 import { ThemeProvider } from './hooks/useTheme';
 import { initLenis } from './lib/scroll';
 
@@ -18,6 +19,7 @@ function App() {
     <ThemeProvider>
       <Router>
         <Preloader />
+        <FluidSphereBackground />
         <CustomCursor />
         <div className="flex flex-col min-h-screen text-gray-900 dark:text-white transition-colors duration-800 ease-in-out">
           <Navbar />

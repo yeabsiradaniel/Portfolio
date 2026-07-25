@@ -21,7 +21,7 @@ const AboutMe = () => {
           className="flex-shrink-0"
         >
           <div className="relative group">
-            <div className="absolute -inset-1 rounded-full bg-gradient-to-tr from-accent via-purple-500 to-pink-500 dark:from-accent dark:via-emerald-400 dark:to-cyan-400 opacity-75 blur-sm group-hover:opacity-100 group-hover:blur-md transition-all duration-500 animate-spin-slow" />
+            <div className="absolute -inset-1 rounded-full opacity-75 blur-sm group-hover:opacity-100 group-hover:blur-md transition-all duration-500 animate-spin-slow bg-[conic-gradient(from_0deg,rgb(var(--color-accent)),transparent_55%,rgb(var(--color-accent)))]" />
             <div className="relative w-48 h-48 lg:w-56 lg:h-56 rounded-full overflow-hidden ring-4 ring-white dark:ring-gray-800">
               <img
                 src="/images/profile.jpg"

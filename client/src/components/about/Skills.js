@@ -6,8 +6,6 @@ const skillCategories = [
   {
     title: 'Mobile Development',
     icon: FaMobileAlt,
-    color: 'from-blue-500 to-purple-600',
-    darkColor: 'dark:from-teal-400 dark:to-emerald-500',
     skills: [
       'Flutter & Dart',
       'BLoC / Cubit',
@@ -21,8 +19,6 @@ const skillCategories = [
   {
     title: 'Web & Backend',
     icon: FaServer,
-    color: 'from-purple-500 to-pink-600',
-    darkColor: 'dark:from-emerald-400 dark:to-cyan-500',
     skills: [
       'React.js',
       'Node.js & Express',
@@ -38,8 +34,6 @@ const skillCategories = [
   {
     title: 'DevOps & Tools',
     icon: FaTools,
-    color: 'from-pink-500 to-orange-500',
-    darkColor: 'dark:from-cyan-400 dark:to-teal-500',
     skills: [
       'Git & GitHub',
       'CI/CD (GitHub Actions)',
@@ -109,12 +103,12 @@ const Skills = () => {
               transition={{ type: 'spring', stiffness: 300, damping: 20 }}
               className="relative group glass-card rounded-2xl p-6 text-left cursor-default overflow-hidden"
             >
-              {/* Gradient top accent */}
-              <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${category.color} ${category.darkColor} opacity-60 group-hover:opacity-100 transition-opacity duration-300`} />
+              {/* Accent top bar */}
+              <div className="absolute top-0 left-0 right-0 h-1 bg-accent/50 group-hover:bg-accent transition-colors duration-300" />
 
               {/* Icon */}
-              <div className={`inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br ${category.color} ${category.darkColor} mb-4`}>
-                <Icon className="h-5 w-5 text-white" />
+              <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-accent mb-4">
+                <Icon className="h-5 w-5 text-on-accent" />
               </div>
 
               <h3 className="font-heading font-bold text-lg mb-4">{category.title}</h3>

@@ -13,7 +13,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-[#BBA1C3] dark:bg-[#455E3D] transition-colors duration-800 ease-in-out">
+    <footer className="glass-card border-t border-black/5 dark:border-white/10 transition-colors duration-800 ease-in-out">
       <div className="flex justify-center">
         <div className="w-3/5 h-px bg-gradient-to-r from-transparent via-accent to-transparent opacity-40" />
       </div>
@@ -34,7 +34,7 @@ const Footer = () => {
             <motion.button
               onClick={() => scrollToId('contact')}
               whileTap={{ scale: 0.97 }}
-              className="px-8 py-4 rounded-full bg-accent hover:bg-accent-hover text-white font-sans font-bold transition-colors duration-300 glow-accent"
+              className="px-8 py-4 rounded-full bg-accent hover:bg-accent-hover text-on-accent font-sans font-bold transition-colors duration-300 glow-accent"
             >
               Start a Conversation
             </motion.button>

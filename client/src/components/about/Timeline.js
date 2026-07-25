@@ -63,10 +63,10 @@ const Timeline = () => {
       <div ref={containerRef} className="relative max-w-3xl mx-auto">
         {/* Static background line */}
         <div className="absolute h-full w-0.5 bg-gray-300/40 dark:bg-gray-600/40 rounded-full transform left-5 md:left-1/2 md:-translate-x-1/2 transition-colors duration-800"></div>
-        {/* Animated gradient fill line */}
+        {/* Animated accent fill line */}
         <motion.div
           style={{ height: lineHeight }}
-          className="absolute w-0.5 rounded-full transform left-5 md:left-1/2 md:-translate-x-1/2 bg-gradient-to-b from-accent via-purple-500 to-pink-500 dark:from-accent dark:via-emerald-400 dark:to-cyan-400"
+          className="absolute w-0.5 rounded-full transform left-5 md:left-1/2 md:-translate-x-1/2 bg-accent"
         >
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-accent blur-sm" />
         </motion.div>
@@ -90,7 +90,7 @@ const Timeline = () => {
               transition={{ type: 'spring', stiffness: 300, damping: 15, delay: 0.1 }}
               className="md:hidden z-20 flex-shrink-0 flex items-center justify-center bg-accent shadow-lg shadow-accent/25 w-10 h-10 rounded-full"
             >
-              <span className="text-white font-bold text-xs font-sans">{item.year}</span>
+              <span className="text-on-accent font-bold text-xs font-sans">{item.year}</span>
             </motion.div>
             <div className="md:hidden glass-card rounded-xl flex-1 ml-3 px-4 py-3 text-left">
               <h3 className="font-sans font-bold text-sm mb-0.5">{item.title}</h3>
@@ -107,7 +107,7 @@ const Timeline = () => {
               transition={{ type: 'spring', stiffness: 300, damping: 15, delay: 0.1 }}
               className="hidden md:flex z-20 items-center justify-center bg-accent shadow-lg shadow-accent/25 w-14 h-14 rounded-full"
             >
-              <span className="text-white font-bold text-lg font-sans">{item.year}</span>
+              <span className="text-on-accent font-bold text-lg font-sans">{item.year}</span>
             </motion.div>
             <motion.div
               whileHover={{ y: -4, scale: 1.02 }}

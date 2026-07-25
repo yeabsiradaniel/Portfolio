@@ -71,7 +71,7 @@ const ThemeToggle = () => {
       {theme === 'light' ? (
         <MoonIcon className="h-5 w-5 text-gray-700" />
       ) : (
-        <SunIcon className="h-5 w-5 text-yellow-400" />
+        <SunIcon className="h-5 w-5 text-accent" />
       )}
     </motion.button>
   );

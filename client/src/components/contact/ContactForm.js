@@ -96,7 +96,7 @@ const ContactForm = () => {
           whileTap={{ scale: 0.98 }}
           type="submit"
           disabled={sending}
-          className="w-full py-3.5 px-6 bg-accent hover:bg-accent-hover text-white rounded-xl font-semibold text-sm transition-all duration-300 glow-accent disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="w-full py-3.5 px-6 bg-accent hover:bg-accent-hover text-on-accent rounded-xl font-semibold text-sm transition-all duration-300 glow-accent disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {sending ? (
             <>

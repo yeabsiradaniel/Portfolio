@@ -49,7 +49,7 @@ const Preloader = () => {
           key="preloader"
           exit={{ y: '-100%' }}
           transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
-          className="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-[#BBA1C3] dark:bg-[#455E3D]"
+          className="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-[#ececee] dark:bg-[#111112]"
         >
           <div className="overflow-hidden">
             <motion.h1

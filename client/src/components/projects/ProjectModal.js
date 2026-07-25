@@ -80,7 +80,7 @@ const ProjectModal = ({ project, closeModal }) => {
                   rel="noopener noreferrer"
                   onPointerDown={(e) => e.stopPropagation()}
                   onClick={(e) => e.stopPropagation()}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-accent hover:bg-accent-hover text-white rounded-xl font-sans font-medium text-sm transition-colors duration-200"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-accent hover:bg-accent-hover text-on-accent rounded-xl font-sans font-medium text-sm transition-colors duration-200"
                 >
                   <FaExternalLinkAlt className="h-3.5 w-3.5" />
                   Live Demo
