@@ -26,10 +26,19 @@ const ProjectCard = ({ project, openModal, index }) => {
       ref={cardRef}
       layoutId={`card-container-${project._id}`}
       onClick={() => openModal(project)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openModal(project);
+        }
+      }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       data-cursor="View"
-      className="cursor-pointer rounded-2xl overflow-hidden glass-card group"
+      role="button"
+      tabIndex={0}
+      aria-label={`${project.title} — view project details`}
+      className="cursor-pointer rounded-2xl overflow-hidden glass-card group focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/70"
       style={{
         rotateX,
         rotateY,

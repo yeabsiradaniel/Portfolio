@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Hero from '../components/home/Hero';
 import AboutMe from '../components/about/AboutMe';
 import Skills from '../components/about/Skills';
@@ -10,6 +10,7 @@ import { EnvelopeIcon, PhoneIcon } from '@heroicons/react/24/solid';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import useDocumentTitle from '../hooks/useDocumentTitle';
 import RevealText from '../components/common/RevealText';
+import { scrollToId } from '../lib/scroll';
 
 const contactDetails = [
   {
@@ -46,6 +47,15 @@ const SectionDivider = () => (
 
 const Home = () => {
   useDocumentTitle('Yeabsira Daniel | Portfolio');
+
+  // Honor deep links (/#projects etc.): scroll to the section once the
+  // preloader has had its moment and the sections exist.
+  useEffect(() => {
+    if (!window.location.hash) return undefined;
+    const id = window.location.hash.slice(1);
+    const timer = setTimeout(() => scrollToId(id), 1800);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <>

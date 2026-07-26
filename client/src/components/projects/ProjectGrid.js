@@ -19,8 +19,17 @@ const FeaturedProject = ({ project, openModal }) => (
     className="mb-10 rounded-3xl overflow-hidden glass-card group grid grid-cols-1 lg:grid-cols-2"
   >
     <div
-      className="relative overflow-hidden cursor-pointer min-h-[260px] lg:min-h-[380px]"
+      className="relative overflow-hidden cursor-pointer min-h-[260px] lg:min-h-[380px] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent/70"
       onClick={() => openModal(project)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openModal(project);
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-label={`${project.title} — view case study`}
       data-cursor="View"
     >
       <ProjectImage
