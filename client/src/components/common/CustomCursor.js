@@ -18,6 +18,11 @@ const CustomCursor = () => {
 
     const pos = { x: -100, y: -100 };
     const ring = { x: -100, y: -100 };
+    // Ring size is a scale factor eased in the rAF loop — never animated via
+    // width/height, so the cursor costs no layout work per frame.
+    let targetScale = 1;
+    let currentScale = 1;
+    let pressScale = 1;
     let hoverLabel = null;
     let interactive = false;
     let raf;
@@ -36,10 +41,8 @@ const CustomCursor = () => {
         if (labelRef.current) {
           labelRef.current.textContent = hoverLabel || '';
         }
+        targetScale = hoverLabel ? 2.25 : interactive ? 1.5 : 1;
         if (ringRef.current) {
-          const size = hoverLabel ? 72 : interactive ? 48 : 32;
-          ringRef.current.style.width = `${size}px`;
-          ringRef.current.style.height = `${size}px`;
           ringRef.current.style.backgroundColor = hoverLabel
             ? 'rgb(var(--color-accent) / 0.9)'
             : 'transparent';
@@ -54,10 +57,10 @@ const CustomCursor = () => {
     };
 
     const onDown = () => {
-      if (ringRef.current) ringRef.current.style.transform += ' scale(0.85)';
+      pressScale = 0.85;
     };
     const onUp = () => {
-      // transform is rebuilt every frame in the loop, nothing to undo here
+      pressScale = 1;
     };
 
     const onLeave = () => {
@@ -72,11 +75,16 @@ const CustomCursor = () => {
     const loop = () => {
       ring.x += (pos.x - ring.x) * 0.18;
       ring.y += (pos.y - ring.y) * 0.18;
+      currentScale += (targetScale * pressScale - currentScale) * 0.2;
       if (dotRef.current) {
         dotRef.current.style.transform = `translate(${pos.x}px, ${pos.y}px) translate(-50%, -50%)`;
       }
       if (ringRef.current) {
-        ringRef.current.style.transform = `translate(${ring.x}px, ${ring.y}px) translate(-50%, -50%)`;
+        ringRef.current.style.transform = `translate(${ring.x}px, ${ring.y}px) translate(-50%, -50%) scale(${currentScale})`;
+      }
+      if (labelRef.current) {
+        // keep the label visually 11px regardless of ring scale
+        labelRef.current.style.transform = `scale(${1 / currentScale})`;
       }
       raf = requestAnimationFrame(loop);
     };
@@ -115,7 +123,7 @@ const CustomCursor = () => {
           width: 32,
           height: 32,
           borderColor: 'rgb(var(--color-accent) / 0.6)',
-          transition: 'width 0.25s ease, height 0.25s ease, background-color 0.25s ease, border-color 0.25s ease, opacity 0.2s ease',
+          transition: 'background-color 0.25s ease, border-color 0.25s ease, opacity 0.2s ease',
         }}
       >
         <span
