@@ -109,25 +109,31 @@ const ContactForm = () => {
         </motion.button>
       </form>
 
-      {/* Status messages */}
-      {status === 'success' && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mt-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-center text-sm font-sans"
-        >
-          Message sent successfully! I'll get back to you soon.
-        </motion.div>
-      )}
-      {status === 'error' && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mt-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-700 dark:text-red-400 text-center text-sm font-sans"
-        >
-          Failed to send message. Please try again or email me directly.
-        </motion.div>
-      )}
+      {/* Status messages — announced to screen readers when they change */}
+      <div aria-live="polite" role="status">
+        {status === 'success' && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-center text-sm font-sans"
+          >
+            Message sent — thanks for reaching out. I'll get back to you within a day.
+          </motion.div>
+        )}
+        {status === 'error' && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-700 dark:text-red-400 text-center text-sm font-sans"
+          >
+            Failed to send message. Please try again or{' '}
+            <a href="mailto:yeabsirad9@gmail.com" className="underline underline-offset-2 font-semibold">
+              email me directly
+            </a>
+            .
+          </motion.div>
+        )}
+      </div>
     </motion.div>
   );
 };

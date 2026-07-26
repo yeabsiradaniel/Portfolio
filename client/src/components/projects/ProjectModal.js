@@ -1,10 +1,46 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 import ProjectImage from './ProjectImage';
 
 const ProjectModal = ({ project, closeModal }) => {
+  const modalRef = useRef(null);
+  const closeRef = useRef(null);
+
+  // Dialog behavior: Escape closes, focus moves into the dialog on open,
+  // Tab cycles inside it, and focus returns to the trigger on close.
+  useEffect(() => {
+    const previouslyFocused = document.activeElement;
+    closeRef.current?.focus();
+
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        closeModal();
+        return;
+      }
+      if (e.key === 'Tab' && modalRef.current) {
+        const focusables = modalRef.current.querySelectorAll('a[href], button:not([disabled])');
+        if (focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      if (previouslyFocused && previouslyFocused.focus) previouslyFocused.focus();
+    };
+  }, [closeModal]);
+
   const handleBackgroundClick = (e) => {
     if (e.target === e.currentTarget) {
       closeModal();
@@ -21,7 +57,11 @@ const ProjectModal = ({ project, closeModal }) => {
         onClick={handleBackgroundClick}
       >
         <motion.div
+          ref={modalRef}
           layoutId={`card-container-${project._id}`}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${project.title} — project details`}
           className="bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto transition-colors duration-300 border border-gray-200/20 dark:border-gray-700/20"
         >
           {/* Image with close button */}
@@ -34,7 +74,9 @@ const ProjectModal = ({ project, closeModal }) => {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
             <button
+              ref={closeRef}
               onClick={closeModal}
+              aria-label="Close project details"
               className="absolute top-4 right-4 p-2 rounded-full bg-black/30 backdrop-blur-sm text-white hover:bg-black/50 transition-colors duration-200"
             >
               <XMarkIcon className="h-5 w-5" />
@@ -61,7 +103,7 @@ const ProjectModal = ({ project, closeModal }) => {
             <div className="mb-6">
               <h3 className="text-sm uppercase tracking-widest text-accent font-sans font-semibold mb-3">Tech Stack</h3>
               <div className="flex flex-wrap gap-2">
-                {project.techStack.map((tech, index) => (
+                {(project.techStack || []).map((tech, index) => (
                   <span
                     key={index}
                     className="px-3 py-1.5 text-xs font-sans font-medium rounded-lg bg-accent/10 dark:bg-accent/15 text-accent border border-accent/20 transition-colors duration-300"
@@ -74,9 +116,9 @@ const ProjectModal = ({ project, closeModal }) => {
 
             {/* Links */}
             <div className="flex flex-wrap gap-3 pt-4 border-t border-gray-200/50 dark:border-gray-700/50">
-              {project.liveLink && (
+              {project.liveUrl && (
                 <a
-                  href={project.liveLink}
+                  href={project.liveUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   onPointerDown={(e) => e.stopPropagation()}
@@ -87,9 +129,9 @@ const ProjectModal = ({ project, closeModal }) => {
                   Live Demo
                 </a>
               )}
-              {project.githubLink && (
+              {project.githubUrl && (
                 <a
-                  href={project.githubLink}
+                  href={project.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   onPointerDown={(e) => e.stopPropagation()}
