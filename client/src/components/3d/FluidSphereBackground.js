@@ -79,9 +79,67 @@ const materialPresets = {
     iridescenceIOR: 1.3,
     thickness: 0.0,
   },
+  // Original presets (not from the app):
+  // celadon — matte ceramic glaze with a soft sheen at grazing angles
+  celadon: {
+    color: new THREE.Color(0xc2d8cb),
+    roughness: 0.45,
+    metalness: 0.0,
+    transmission: 0.0,
+    ior: 1.5,
+    clearcoat: 0.35,
+    clearcoatRoughness: 0.4,
+    iridescence: 0.0,
+    iridescenceIOR: 1.3,
+    thickness: 0.0,
+    sheen: 1.0,
+    sheenRoughness: 0.5,
+    sheenColor: new THREE.Color(0xffffff),
+  },
+  // copper — warm liquid metal, calmer than gold
+  copper: {
+    color: new THREE.Color(0xb87333),
+    roughness: 0.3,
+    metalness: 1.0,
+    transmission: 0.0,
+    ior: 1.5,
+    clearcoat: 0.15,
+    clearcoatRoughness: 0.25,
+    iridescence: 0.0,
+    iridescenceIOR: 1.3,
+    thickness: 0.0,
+  },
+  // oil-slick — near-black base with full iridescent rainbow shift
+  'oil-slick': {
+    color: new THREE.Color(0x0d0d0f),
+    roughness: 0.12,
+    metalness: 0.4,
+    transmission: 0.0,
+    ior: 1.5,
+    clearcoat: 1.0,
+    clearcoatRoughness: 0.05,
+    iridescence: 1.0,
+    iridescenceIOR: 1.2,
+    thickness: 0.0,
+  },
+  // smoked-glass — dark frosted transmissive, the moody sibling of glass
+  'smoked-glass': {
+    color: new THREE.Color(0x2a3138),
+    roughness: 0.25,
+    metalness: 0.0,
+    transmission: 0.85,
+    ior: 1.4,
+    clearcoat: 0.4,
+    clearcoatRoughness: 0.2,
+    iridescence: 0.0,
+    iridescenceIOR: 1.3,
+    thickness: 1.5,
+  },
 };
 
-const PRESET_ORDER = ['obsidian', 'pearl', 'gold', 'glass', 'carbon'];
+const PRESET_ORDER = ['obsidian', 'pearl', 'gold', 'glass', 'carbon', 'celadon', 'copper', 'oil-slick', 'smoked-glass'];
+
+const SHEEN_DEFAULT_COLOR = new THREE.Color(0xffffff);
 
 const swatchStyles = {
   obsidian: { background: 'linear-gradient(135deg, #2a2a2a, #000)' },
@@ -89,6 +147,10 @@ const swatchStyles = {
   gold: { background: 'linear-gradient(135deg, #ffe680, #b8860b)' },
   glass: { background: 'linear-gradient(135deg, rgba(255,255,255,0.9), rgba(160,200,255,0.35))' },
   carbon: { background: 'linear-gradient(135deg, #0a0a0a, #2b2b2b)' },
+  celadon: { background: 'linear-gradient(135deg, #dcebe2, #9dbfa9)' },
+  copper: { background: 'linear-gradient(135deg, #e8a06a, #8c4a1f)' },
+  'oil-slick': { background: 'linear-gradient(135deg, #43305e, #101014 55%, #0f3d3d)' },
+  'smoked-glass': { background: 'linear-gradient(135deg, rgba(120,140,160,0.85), rgba(30,38,46,0.6))' },
 };
 
 const FluidSphereBackground = ({ renderName = true }) => {
@@ -192,6 +254,9 @@ const FluidSphereBackground = ({ renderName = true }) => {
       clearcoatRoughness: materialPresets.obsidian.clearcoatRoughness,
       iridescence: materialPresets.obsidian.iridescence,
       iridescenceIOR: materialPresets.obsidian.iridescenceIOR,
+      sheen: 0,
+      sheenRoughness: 0.5,
+      sheenColor: new THREE.Color(0xffffff),
     });
 
     material.onBeforeCompile = (shader) => {
@@ -558,6 +623,10 @@ const FluidSphereBackground = ({ renderName = true }) => {
       material.iridescence = THREE.MathUtils.lerp(material.iridescence, targetMaterialProps.iridescence, lerpFactor);
       material.iridescenceIOR = THREE.MathUtils.lerp(material.iridescenceIOR, targetMaterialProps.iridescenceIOR, lerpFactor);
       material.thickness = THREE.MathUtils.lerp(material.thickness, targetMaterialProps.thickness, lerpFactor);
+      // sheen defaults to off when a preset doesn't define it
+      material.sheen = THREE.MathUtils.lerp(material.sheen, targetMaterialProps.sheen ?? 0, lerpFactor);
+      material.sheenRoughness = THREE.MathUtils.lerp(material.sheenRoughness, targetMaterialProps.sheenRoughness ?? 0.5, lerpFactor);
+      material.sheenColor.lerp(targetMaterialProps.sheenColor ?? SHEEN_DEFAULT_COLOR, lerpFactor);
 
       scene.backgroundIntensity = THREE.MathUtils.lerp(
         scene.backgroundIntensity,
