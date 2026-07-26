@@ -66,15 +66,29 @@ const materialPresets = {
     iridescenceIOR: 1.1,
     thickness: 0.6,
   },
+  // Exact port of the carbon preset from Liquid_visualizer (wallpaper.html)
+  carbon: {
+    color: new THREE.Color(0x1a1a1a),
+    roughness: 0.6,
+    metalness: 0.3,
+    transmission: 0.0,
+    ior: 1.5,
+    clearcoat: 0.0,
+    clearcoatRoughness: 0.5,
+    iridescence: 0.0,
+    iridescenceIOR: 1.3,
+    thickness: 0.0,
+  },
 };
 
-const PRESET_ORDER = ['obsidian', 'pearl', 'gold', 'glass'];
+const PRESET_ORDER = ['obsidian', 'pearl', 'gold', 'glass', 'carbon'];
 
 const swatchStyles = {
   obsidian: { background: 'linear-gradient(135deg, #2a2a2a, #000)' },
   pearl: { background: 'linear-gradient(135deg, #ffffff, #d8d2c4)' },
   gold: { background: 'linear-gradient(135deg, #ffe680, #b8860b)' },
   glass: { background: 'linear-gradient(135deg, rgba(255,255,255,0.9), rgba(160,200,255,0.35))' },
+  carbon: { background: 'linear-gradient(135deg, #0a0a0a, #2b2b2b)' },
 };
 
 const FluidSphereBackground = ({ renderName = true }) => {
