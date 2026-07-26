@@ -42,6 +42,11 @@ class ErrorBoundary extends Component {
   render() {
     // If an error has been caught, render the fallback UI.
     if (this.state.hasError) {
+      // Callers may supply their own fallback (e.g. fallback={null} around the
+      // WebGL background) so one component's crash never blanks the whole app.
+      if (this.props.fallback !== undefined) {
+        return this.props.fallback;
+      }
       return (
         <div style={{ padding: '20px', border: '1px solid red', margin: '20px' }}>
           <h1>Something went wrong.</h1>

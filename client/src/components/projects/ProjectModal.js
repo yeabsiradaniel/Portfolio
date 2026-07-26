@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
+import ProjectImage from './ProjectImage';
 
 const ProjectModal = ({ project, closeModal }) => {
   const handleBackgroundClick = (e) => {
@@ -25,9 +26,9 @@ const ProjectModal = ({ project, closeModal }) => {
         >
           {/* Image with close button */}
           <div className="relative">
-            <motion.img
+            <ProjectImage
               layoutId={`image-${project._id}`}
-              src={project.imageUrl || 'https://via.placeholder.com/400x250'}
+              src={project.imageUrl}
               alt={project.title}
               className="w-full h-64 sm:h-80 object-cover"
             />

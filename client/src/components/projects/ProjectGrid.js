@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import ProjectCard from './ProjectCard';
 import ProjectModal from './ProjectModal';
+import ProjectImage from './ProjectImage';
+import fallbackProjects from '../../data/fallbackProjects';
 import { motion } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 import { getLenis } from '../../lib/scroll';
@@ -21,8 +23,9 @@ const FeaturedProject = ({ project, openModal }) => (
       onClick={() => openModal(project)}
       data-cursor="View"
     >
-      <img
-        src={project.imageUrl || 'https://via.placeholder.com/800x500'}
+      <ProjectImage
+        layoutId={`image-${project._id}`}
+        src={project.imageUrl}
         alt={project.title}
         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
       />
@@ -40,7 +43,7 @@ const FeaturedProject = ({ project, openModal }) => (
         {project.title}
       </h2>
       <p className="text-sm lg:text-base text-gray-600 dark:text-gray-400 font-sans leading-relaxed mb-6">
-        {project.description.length > 280
+        {(project.description || '').length > 280
           ? `${project.description.substring(0, 280)}...`
           : project.description}
       </p>
@@ -96,22 +99,33 @@ const ProjectGrid = () => {
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [usedFallback, setUsedFallback] = useState(false);
+
+  const fetchProjects = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get('/api/projects');
+      // Never trust the response shape: a 200 HTML error page or any
+      // non-array payload must fall back, not crash the render.
+      if (Array.isArray(response.data) && response.data.length > 0) {
+        setProjects(response.data);
+        setUsedFallback(false);
+      } else {
+        setProjects(fallbackProjects);
+        setUsedFallback(true);
+      }
+    } catch (err) {
+      setProjects(fallbackProjects);
+      setUsedFallback(true);
+      console.error('Error fetching projects:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await axios.get('/api/projects');
-        setProjects(response.data);
-      } catch (err) {
-        setError('Failed to load projects. Please try again later.');
-        console.error('Error fetching projects:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchProjects();
-  }, []);
+  }, [fetchProjects]);
 
   const openModal = (project) => setSelectedProject(project);
   const closeModal = () => setSelectedProject(null);
@@ -137,14 +151,6 @@ const ProjectGrid = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="text-center py-16">
-        <p className="text-sm font-sans text-red-500">{error}</p>
-      </div>
-    );
-  }
-
   if (projects.length === 0) {
     return (
       <div className="text-center py-16">
@@ -153,7 +159,9 @@ const ProjectGrid = () => {
     );
   }
 
-  const [featured, ...rest] = projects;
+  // Featured is an explicit flag in the data, not whatever the API returns first.
+  const featured = projects.find((p) => p.featured) || projects[0];
+  const rest = projects.filter((p) => p !== featured);
 
   return (
     <motion.div
@@ -162,6 +170,19 @@ const ProjectGrid = () => {
       transition={{ duration: 0.5 }}
       className="max-w-5xl mx-auto"
     >
+      {usedFallback && (
+        <div className="mb-6 flex flex-wrap items-center justify-center gap-3 text-center">
+          <p className="text-xs font-sans text-gray-500 dark:text-gray-400">
+            Live project data is unavailable right now — showing a bundled selection.
+          </p>
+          <button
+            onClick={fetchProjects}
+            className="text-xs font-sans font-semibold text-accent hover:text-accent-hover underline underline-offset-2 transition-colors duration-200"
+          >
+            Retry live data
+          </button>
+        </div>
+      )}
       <FeaturedProject project={featured} openModal={openModal} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
