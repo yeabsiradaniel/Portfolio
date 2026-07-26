@@ -11,7 +11,7 @@
  * fills (semi-opaque, not blur alone).
  */
 
-export const MATERIALS = ['obsidian', 'pearl', 'gold', 'glass'];
+export const MATERIALS = ['obsidian', 'pearl', 'gold', 'glass', 'carbon'];
 
 // first-time visitors (no stored choice) get the glass preset in both modes
 export const defaultMaterialFor = () => 'glass';
@@ -79,6 +79,22 @@ const SCENE_THEMES = {
       onAccent: '8 47 73', // sky-950-ish text on bright glass blue
       cardBg: 'rgba(12, 28, 40, 0.55)',
       cardBorder: 'rgba(56, 189, 248, 0.16)',
+    },
+  },
+  carbon: {
+    light: {
+      accent: '51 65 85', // slate-700
+      accentHover: '30 41 59', // slate-800
+      onAccent: '255 255 255',
+      cardBg: 'rgba(248, 250, 252, 0.55)',
+      cardBorder: 'rgba(15, 23, 42, 0.10)',
+    },
+    dark: {
+      accent: '148 163 184', // slate-400
+      accentHover: '203 213 225', // slate-300
+      onAccent: '15 23 42', // slate-900 text on bright slate
+      cardBg: 'rgba(15, 23, 42, 0.55)',
+      cardBorder: 'rgba(148, 163, 184, 0.14)',
     },
   },
 };
