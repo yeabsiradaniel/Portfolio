@@ -14,9 +14,12 @@ const socialLinks = [
 
 /**
  * Hero: the fluid sphere owns the exact center of the screen and the content
- * circles it on four sides — name above, pitch to the right, CTAs below,
- * socials to the left. Every block enters by traveling outward from the
- * screen center, so the composition unfolds from the sphere.
+ * circles it on four sides — pitch to the right, CTAs below, socials to the
+ * left, the name rendered inside the scene behind the glass sphere (with an
+ * sr-only DOM copy for accessibility). Entrances travel outward from center.
+ * Resilience contract: every content block is real DOM, visible from first
+ * paint — entrances are transform-only enhancements, never opacity gates, so
+ * content survives slow JS, hidden tabs, and WebGL failure.
  * On small screens the sides collapse into a top/bottom stack.
  */
 const Hero = () => {
@@ -48,12 +51,17 @@ const Hero = () => {
       className="relative h-screen w-full overflow-hidden bg-transparent transition-colors duration-800 ease-in-out"
       style={{ marginTop: '-64px', paddingTop: '64px' }}
     >
-      {/* North: badge (the name itself is rendered inside the 3D scene,
-          sandwiched between the studio backdrop and the sphere) */}
+      {/* Accessible name: the visible title lives inside the 3D scene,
+          sandwiched behind the glass sphere. This DOM copy serves screen
+          readers, search, and Ctrl+F — and the App-level boundary renders a
+          visible stand-in if WebGL ever fails. */}
+      <h1 className="sr-only">Yeabsira Daniel</h1>
+
+      {/* North: badge */}
       <motion.div
-        initial={{ opacity: 0, x: '-50%', y: '24vh', scale: 0.6 }}
-        animate={{ opacity: 1, x: '-50%', y: 0, scale: 1 }}
-        transition={{ delay: 0.9, duration: 0.9, ease: 'easeOut' }}
+        initial={{ x: '-50%', y: '24vh', scale: 0.6 }}
+        animate={{ x: '-50%', y: 0, scale: 1 }}
+        transition={{ delay: 0.15, duration: 0.8, ease: 'easeOut' }}
         className="absolute top-[6%] sm:top-[7%] left-1/2 z-10 w-full px-4 text-center"
       >
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card">
@@ -67,9 +75,9 @@ const Hero = () => {
 
       {/* East: pitch (desktop) */}
       <motion.div
-        initial={{ opacity: 0, x: '-30vw', y: '-50%', scale: 0.7 }}
-        animate={{ opacity: 1, x: 0, y: '-50%', scale: 1 }}
-        transition={{ delay: 1.15, duration: 0.9, ease: 'easeOut' }}
+        initial={{ x: '-30vw', y: '-50%', scale: 0.7 }}
+        animate={{ x: 0, y: '-50%', scale: 1 }}
+        transition={{ delay: 0.25, duration: 0.8, ease: 'easeOut' }}
         className="hidden lg:flex absolute right-10 xl:right-16 top-1/2 z-10 max-w-xs xl:max-w-sm flex-col gap-4 text-right"
       >
         {tagline}
@@ -78,9 +86,9 @@ const Hero = () => {
 
       {/* South: CTAs */}
       <motion.div
-        initial={{ opacity: 0, x: '-50%', y: '-24vh', scale: 0.6 }}
-        animate={{ opacity: 1, x: '-50%', y: 0, scale: 1 }}
-        transition={{ delay: 1.35, duration: 0.9, ease: 'easeOut' }}
+        initial={{ x: '-50%', y: '-24vh', scale: 0.6 }}
+        animate={{ x: '-50%', y: 0, scale: 1 }}
+        transition={{ delay: 0.35, duration: 0.8, ease: 'easeOut' }}
         className="absolute bottom-[11%] sm:bottom-[8%] left-1/2 z-10 w-full max-w-2xl px-4 text-center"
       >
         {/* pitch stacks here on small screens */}
@@ -129,9 +137,9 @@ const Hero = () => {
 
       {/* West: social links (desktop) */}
       <motion.div
-        initial={{ opacity: 0, x: '30vw', y: '-50%' }}
-        animate={{ opacity: 1, x: 0, y: '-50%' }}
-        transition={{ delay: 1.5, duration: 0.8, ease: 'easeOut' }}
+        initial={{ x: '30vw', y: '-50%' }}
+        animate={{ x: 0, y: '-50%' }}
+        transition={{ delay: 0.45, duration: 0.7, ease: 'easeOut' }}
         className="hidden lg:flex absolute left-10 xl:left-16 top-1/2 z-20 flex-col items-center gap-4"
       >
         <div className="w-px h-16 bg-gradient-to-b from-transparent via-white/30 to-transparent" />
@@ -155,9 +163,9 @@ const Hero = () => {
 
       {/* Scroll indicator: bottom-right, clear of the centered scene controls */}
       <motion.div
-        initial={{ opacity: 0, y: '-35vh' }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.7, duration: 0.8, ease: 'easeOut' }}
+        initial={{ y: '-35vh' }}
+        animate={{ y: 0 }}
+        transition={{ delay: 0.55, duration: 0.7, ease: 'easeOut' }}
         onClick={() => scrollToSection('about')}
         className="absolute bottom-6 right-6 z-20 cursor-pointer hidden sm:flex flex-col items-center gap-2 group"
       >

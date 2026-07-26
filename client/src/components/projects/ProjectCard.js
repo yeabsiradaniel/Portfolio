@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useSpring } from 'framer-motion';
+import ProjectImage from './ProjectImage';
 
 const ProjectCard = ({ project, openModal, index }) => {
   const cardRef = useRef(null);
@@ -43,9 +44,9 @@ const ProjectCard = ({ project, openModal, index }) => {
     >
       {/* Image with overlay */}
       <div className="relative overflow-hidden">
-        <motion.img
+        <ProjectImage
           layoutId={`image-${project._id}`}
-          src={project.imageUrl || 'https://via.placeholder.com/400x250'}
+          src={project.imageUrl}
           alt={project.title}
           className="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-105"
         />
@@ -80,7 +81,7 @@ const ProjectCard = ({ project, openModal, index }) => {
           layoutId={`description-${project._id}`}
           className="text-sm text-gray-600 dark:text-gray-400 font-sans leading-relaxed line-clamp-2"
         >
-          {project.description.substring(0, 120)}...
+          {(project.description || '').substring(0, 120)}{(project.description || '').length > 120 ? '...' : ''}
         </motion.p>
 
         {/* View details hint */}

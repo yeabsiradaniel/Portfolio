@@ -77,7 +77,7 @@ const swatchStyles = {
   glass: { background: 'linear-gradient(135deg, rgba(255,255,255,0.9), rgba(160,200,255,0.35))' },
 };
 
-const FluidSphereBackground = () => {
+const FluidSphereBackground = ({ renderName = true }) => {
   const containerRef = useRef(null);
   const apiRef = useRef(null);
   const { theme, material: activePreset, setMaterial } = useTheme();
@@ -366,12 +366,17 @@ const FluidSphereBackground = () => {
     });
     const namePlane = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 0.9), nameMaterial);
     namePlane.position.set(0, nameBaseY, -0.55);
-    scene.add(namePlane);
+    // The hero name is real DOM now; the in-scene plane only renders when a
+    // caller explicitly asks for it (renderName). When off, the mesh is still
+    // constructed so layout/disposal paths stay uniform, but it never joins
+    // the scene and drawName becomes a no-op.
+    if (renderName) scene.add(namePlane);
 
     let currentTheme = theme;
     let currentMaterial = activePreset;
 
     const drawName = () => {
+      if (!renderName) return;
       const ctx = nameCanvas.getContext('2d');
       ctx.clearRect(0, 0, nameCanvas.width, nameCanvas.height);
       const tokens = getSceneTokens(currentTheme, currentMaterial);
