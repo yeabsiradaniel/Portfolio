@@ -114,8 +114,7 @@ const Navbar = () => {
                     {activeSection === link.id && (
                       <motion.div
                         layoutId="nav-indicator"
-                        className="absolute bottom-0 left-1/2 w-5 h-0.5 bg-accent rounded-full"
-                        style={{ x: '-50%' }}
+                        className="absolute bottom-0 left-1/2 -ml-2.5 w-5 h-0.5 bg-accent rounded-full"
                         transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                       />
                     )}
