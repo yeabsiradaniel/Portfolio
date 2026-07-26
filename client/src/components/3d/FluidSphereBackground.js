@@ -138,11 +138,16 @@ const FluidSphereBackground = ({ renderName = true }) => {
     const ripplePositions = [];
     const rippleTimes = [];
     const rippleIntensities = [];
+    // World-space anchors keep each ripple pinned where the user actually
+    // clicked while the sphere rotates/scrolls; converted to local space
+    // per frame for the shader (5 worldToLocal calls — negligible).
+    const rippleAnchors = [];
     for (let i = 0; i < MAX_RIPPLES; i++) {
       // non-zero init to prevent NaN in GLSL normalize()
       ripplePositions.push(new THREE.Vector3(0, 1, 0));
       rippleTimes.push(-1.0);
       rippleIntensities.push(0.0);
+      rippleAnchors.push(new THREE.Vector3(0, 1, 0));
     }
 
     const uniforms = {
@@ -250,14 +255,14 @@ const FluidSphereBackground = ({ renderName = true }) => {
                 if (uRippleTimes[i] >= 0.0) {
                     float dist = acos(clamp(dot(normalize(pos), normalize(uRipplePositions[i])), -1.0, 1.0));
 
-                    float frequency = 25.0;
-                    float speed = 8.0;
-                    float expansionSpeed = 2.0;
+                    float frequency = 17.0;
+                    float speed = 7.0;
+                    float expansionSpeed = 1.7;
 
                     float wave = sin(dist * frequency - uRippleTimes[i] * speed);
 
                     float currentRadius = uRippleTimes[i] * expansionSpeed;
-                    float ringThickness = 0.6;
+                    float ringThickness = 0.75;
 
                     float envelope = exp(-pow(dist - currentRadius, 2.0) / (2.0 * pow(ringThickness / 2.0, 2.0)));
 
@@ -293,7 +298,7 @@ const FluidSphereBackground = ({ renderName = true }) => {
         '#include <beginnormal_vertex>',
         `
         vec3 localPosition = position;
-        float dispOffset = 0.005;
+        float dispOffset = 0.02;
         vec3 dispTangent = vec3(1.0, 0.0, 0.0);
         vec3 dispBitangent = vec3(0.0, 1.0, 0.0);
 
@@ -447,6 +452,13 @@ const FluidSphereBackground = ({ renderName = true }) => {
 
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
+    // Analytic ray-vs-sphere hit: exact enough for a ripple origin and ~10,000x
+    // cheaper than raycasting the 180k-triangle mesh, which stalled the main
+    // thread for milliseconds on every click. Radius covers the displaced
+    // silhouette so bulge clicks still register.
+    const clickBounds = new THREE.Sphere(new THREE.Vector3(), 1.15);
+    const clickPoint = new THREE.Vector3();
+    const anchorTmp = new THREE.Vector3();
 
     const onClick = (e) => {
       if (hasDragged) return;
@@ -456,12 +468,14 @@ const FluidSphereBackground = ({ renderName = true }) => {
       mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
 
       raycaster.setFromCamera(mouse, camera);
-      const intersects = raycaster.intersectObject(sphere);
+      sphere.getWorldPosition(clickBounds.center);
+      clickBounds.radius = 1.15 * sphere.getWorldScale(anchorTmp).x;
 
-      if (intersects.length > 0) {
-        const localPoint = sphere.worldToLocal(intersects[0].point.clone());
-
-        uniforms.uRipplePositions.value[currentRippleIndex].copy(localPoint);
+      if (raycaster.ray.intersectSphere(clickBounds, clickPoint)) {
+        rippleAnchors[currentRippleIndex].copy(clickPoint);
+        uniforms.uRipplePositions.value[currentRippleIndex].copy(
+          sphere.worldToLocal(clickPoint.clone())
+        );
         uniforms.uRippleTimes.value[currentRippleIndex] = 0.0;
         uniforms.uRippleIntensities.value[currentRippleIndex] = 1.0;
 
@@ -508,6 +522,10 @@ const FluidSphereBackground = ({ renderName = true }) => {
 
       for (let i = 0; i < MAX_RIPPLES; i++) {
         if (uniforms.uRippleTimes.value[i] >= 0.0) {
+          // re-pin the shader anchor to the click's world point as the sphere moves
+          uniforms.uRipplePositions.value[i].copy(
+            sphere.worldToLocal(anchorTmp.copy(rippleAnchors[i]))
+          );
           uniforms.uRippleTimes.value[i] += deltaTime;
           if (uniforms.uRippleTimes.value[i] > 3.0) {
             uniforms.uRippleTimes.value[i] = -1.0;
