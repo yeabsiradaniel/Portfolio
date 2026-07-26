@@ -32,8 +32,9 @@ const AboutMe = () => {
           </div>
         </motion.div>
 
-        {/* Text content */}
-        <div className="text-center lg:text-left">
+        {/* Text content: flex-1 so the column fills the row instead of
+            leaving a void on the right side of the container */}
+        <div className="text-center lg:text-left flex-1 max-w-2xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -51,7 +52,7 @@ const AboutMe = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-base lg:text-lg text-gray-700 dark:text-gray-300 leading-relaxed font-sans mb-8 max-w-xl transition-colors duration-300"
+            className="text-base lg:text-lg text-gray-900 dark:text-gray-300 leading-relaxed font-sans mb-8 transition-colors duration-300"
           >
             I build production apps that people actually use. Currently developing ShegerWalk, a gamified fitness app deploying to the Play Store. Previously led frontend at Gebeta Maps, a navigation platform serving delivery businesses in Addis Ababa. I've shipped mobile and web solutions for multiple clients, from expense trackers with SMS parsing to restaurant ordering systems.
           </motion.p>
@@ -73,8 +74,8 @@ const AboutMe = () => {
                 transition={{ delay: 0.7 + i * 0.1, type: 'spring', stiffness: 200 }}
                 className="text-center"
               >
-                <div className="text-3xl lg:text-4xl font-heading font-bold text-accent">{stat.value}</div>
-                <div className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 font-sans mt-1">{stat.label}</div>
+                <div className="text-3xl lg:text-4xl font-heading font-bold text-gray-950 dark:text-accent">{stat.value}</div>
+                <div className="text-xs uppercase tracking-wider text-gray-600 dark:text-gray-400 font-sans mt-1">{stat.label}</div>
               </motion.div>
             ))}
           </motion.div>

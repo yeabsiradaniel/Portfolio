@@ -81,7 +81,7 @@ const Hero = () => {
         initial={{ opacity: 0, x: '-50%', y: '-24vh', scale: 0.6 }}
         animate={{ opacity: 1, x: '-50%', y: 0, scale: 1 }}
         transition={{ delay: 1.35, duration: 0.9, ease: 'easeOut' }}
-        className="absolute bottom-[6%] sm:bottom-[8%] left-1/2 z-10 w-full max-w-2xl px-4 text-center"
+        className="absolute bottom-[11%] sm:bottom-[8%] left-1/2 z-10 w-full max-w-2xl px-4 text-center"
       >
         {/* pitch stacks here on small screens */}
         <div className="lg:hidden flex flex-col gap-3 mb-6">

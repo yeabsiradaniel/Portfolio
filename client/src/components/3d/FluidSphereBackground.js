@@ -332,6 +332,21 @@ const FluidSphereBackground = () => {
     const sphere = new THREE.Mesh(geometry, material);
     scene.add(sphere);
 
+    // phones: shrink the sphere and lift it into the gap between the name
+    // and the pitch so it doesn't sit behind the text
+    // layout mode is re-evaluated on resize so maximizing / snapping the
+    // window switches between the compact and full scene live (no reload)
+    let sphereBaseScale = 1;
+    let sphereBaseY = 0;
+    let nameBaseY = 1.2;
+    const applyLayoutMode = () => {
+      const small = window.innerWidth < 1024;
+      sphereBaseScale = small ? 0.45 : 1;
+      sphereBaseY = small ? 0.7 : 0;
+      nameBaseY = small ? 1.45 : 1.2;
+    };
+    applyLayoutMode();
+
     /* Name plane: the hero title lives inside the scene, sandwiched between
        the studio backdrop and the sphere — the blob occludes it, and glass
        transmission stays intact because the backdrop never left the scene. */
@@ -350,8 +365,7 @@ const FluidSphereBackground = () => {
       toneMapped: false,
     });
     const namePlane = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 0.9), nameMaterial);
-    const NAME_BASE_Y = 1.12;
-    namePlane.position.set(0, NAME_BASE_Y, -0.55);
+    namePlane.position.set(0, nameBaseY, -0.55);
     scene.add(namePlane);
 
     let currentTheme = theme;
@@ -386,7 +400,7 @@ const FluidSphereBackground = () => {
     // narrower viewports shrink the plane so the title never clips
     let namePlaneScale = 1;
     const fitNamePlane = () => {
-      namePlaneScale = Math.min(1, camera.aspect / 1.4);
+      namePlaneScale = Math.min(1, camera.aspect / 1.1);
     };
     fitNamePlane();
 
@@ -451,6 +465,7 @@ const FluidSphereBackground = () => {
     };
 
     const onResize = () => {
+      applyLayoutMode();
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
@@ -518,7 +533,7 @@ const FluidSphereBackground = () => {
         ? 1
         : Math.min(1, ((timeRaw || performance.now()) - entranceStart) / 1200);
       const entranceScale = 1 - Math.pow(1 - entranceT, 3);
-      sphere.scale.setScalar(Math.max(entranceScale, 0.0001));
+      sphere.scale.setScalar(Math.max(entranceScale, 0.0001) * sphereBaseScale);
 
       // name entrance: settle-in scale, slightly after the sphere starts
       const nameT = reducedMotion
@@ -527,9 +542,9 @@ const FluidSphereBackground = () => {
       namePlane.scale.setScalar(namePlaneScale * (0.85 + 0.15 * nameT));
 
       // the object travels with the scroll; the backdrop does not
-      sphere.position.y = THREE.MathUtils.lerp(sphere.position.y, targetSphereY, 0.1);
-      // the title rides with the sphere so they exit the hero together
-      namePlane.position.y = NAME_BASE_Y + sphere.position.y;
+      sphere.position.y = THREE.MathUtils.lerp(sphere.position.y, targetSphereY + sphereBaseY, 0.1);
+      // the title rides with the scroll offset (minus the mobile lift)
+      namePlane.position.y = nameBaseY + sphere.position.y - sphereBaseY;
 
       if (!isDragging && currentAutoMode > 0.5) {
         targetRotation.y += 0.002;
