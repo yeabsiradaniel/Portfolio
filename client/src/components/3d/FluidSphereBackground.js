@@ -796,8 +796,8 @@ const FluidSphereBackground = ({ renderName = true }) => {
           }`}
         >
           <span
-            className={`absolute top-0.5 h-2.5 w-2.5 rounded-full bg-white dark:bg-black shadow transition-transform duration-300 ${
-              autoOn ? 'translate-x-3' : 'translate-x-0.5'
+            className={`absolute top-0.5 left-0.5 h-2.5 w-2.5 rounded-full bg-white dark:bg-black shadow transition-transform duration-300 ${
+              autoOn ? 'translate-x-2.5' : 'translate-x-0'
             }`}
           />
         </button>
@@ -815,8 +815,8 @@ const FluidSphereBackground = ({ renderName = true }) => {
           } ${turbOn ? 'bg-gray-700 dark:bg-gray-300' : 'bg-black/15 dark:bg-white/15'}`}
         >
           <span
-            className={`absolute top-0.5 h-2.5 w-2.5 rounded-full bg-white dark:bg-black shadow transition-transform duration-300 ${
-              turbOn ? 'translate-x-3' : 'translate-x-0.5'
+            className={`absolute top-0.5 left-0.5 h-2.5 w-2.5 rounded-full bg-white dark:bg-black shadow transition-transform duration-300 ${
+              turbOn ? 'translate-x-2.5' : 'translate-x-0'
             }`}
           />
         </button>
