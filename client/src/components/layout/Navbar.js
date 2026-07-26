@@ -51,13 +51,25 @@ const Navbar = () => {
 
   const scrollToSection = (id) => {
     if (location.pathname !== '/') {
-      navigate('/');
+      navigate('/#' + id);
       setTimeout(() => scrollToId(id), 100);
     } else {
       scrollToId(id);
+      // keep the URL hash in sync so sections are shareable deep links
+      window.history.replaceState(null, '', '#' + id);
     }
     setIsOpen(false);
   };
+
+  // Real anchors: middle-click, copy-link, and native focus behavior work;
+  // normal clicks still smooth-scroll via the handler above.
+  const sectionLinkProps = (id) => ({
+    href: '#' + id,
+    onClick: (e) => {
+      e.preventDefault();
+      scrollToSection(id);
+    },
+  });
 
   const panelVariants = {
     closed: { x: '100%' },
@@ -81,17 +93,17 @@ const Navbar = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
-              <button onClick={() => scrollToSection('home')} className="cursor-pointer">
+              <a {...sectionLinkProps('home')} aria-label="Yeabsira Daniel — home" className="cursor-pointer">
                 <Logo className="h-12 w-12 text-accent transition-colors duration-300" />
-              </button>
+              </a>
             </div>
 
             {!isAdminPage && (
               <div className="hidden md:flex items-center space-x-1">
                 {navLinks.map((link) => (
-                  <button
+                  <a
                     key={link.id}
-                    onClick={() => scrollToSection(link.id)}
+                    {...sectionLinkProps(link.id)}
                     className={`relative px-4 py-2 text-sm font-medium font-sans transition-colors duration-300 rounded-lg ${
                       activeSection === link.id
                         ? 'text-accent'
@@ -107,7 +119,7 @@ const Navbar = () => {
                         transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                       />
                     )}
-                  </button>
+                  </a>
                 ))}
               </div>
             )}
@@ -157,12 +169,12 @@ const Navbar = () => {
               </div>
               <div className="flex flex-col items-center pt-8 space-y-2 px-6">
                 {navLinks.map((link, i) => (
-                  <motion.button
+                  <motion.a
                     key={link.id}
+                    {...sectionLinkProps(link.id)}
                     initial={{ opacity: 0, x: 30 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.05 * i }}
-                    onClick={() => scrollToSection(link.id)}
                     className={`w-full text-center py-3 px-4 rounded-xl text-lg font-semibold font-sans transition-all duration-300 ${
                       activeSection === link.id
                         ? 'text-accent bg-accent/10'
@@ -170,7 +182,7 @@ const Navbar = () => {
                     }`}
                   >
                     {link.title}
-                  </motion.button>
+                  </motion.a>
                 ))}
               </div>
             </motion.div>
