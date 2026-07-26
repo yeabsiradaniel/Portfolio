@@ -11,6 +11,8 @@ const puppeteer = require('puppeteer-core');
   const clickSelector = process.argv[7] || '';
   const postClickWait = parseInt(process.argv[8] || '3000', 10);
   const scrollTo = parseInt(process.argv[9] || '0', 10);
+  const vw = parseInt(process.argv[10] || '1920', 10);
+  const vh = parseInt(process.argv[11] || '1032', 10);
 
   const browser = await puppeteer.launch({
     executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
@@ -18,7 +20,7 @@ const puppeteer = require('puppeteer-core');
     args: ['--use-angle=default', '--enable-webgl', '--window-size=1920,1080'],
   });
   const page = await browser.newPage();
-  await page.setViewport({ width: 1920, height: 1032 });
+  await page.setViewport({ width: vw, height: vh, isMobile: vw < 768, hasTouch: vw < 768 });
   if (theme) {
     await page.evaluateOnNewDocument((t) => {
       localStorage.setItem('theme', t);
@@ -40,7 +42,7 @@ const puppeteer = require('puppeteer-core');
   }
   if (scrollTo) {
     await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }), scrollTo);
-    await new Promise((r) => setTimeout(r, 1500));
+    await new Promise((r) => setTimeout(r, 4000));
   }
   await page.screenshot({ path: out });
   await browser.close();

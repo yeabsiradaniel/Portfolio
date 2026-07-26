@@ -36,6 +36,10 @@ app.use(express.json());
 
 // --- Database Connection ---
 
+// The router's DNS (link-local fe80::1) silently drops Node's TXT lookups,
+// which mongodb+srv:// URIs need — queryTxt ETIMEOUT. Resolve via public DNS.
+require('dns').setServers(['8.8.8.8', '1.1.1.1']);
+
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
