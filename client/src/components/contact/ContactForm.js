@@ -31,7 +31,8 @@ const ContactForm = () => {
     }
   };
 
-  const inputClasses = "w-full px-4 py-3 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 rounded-xl font-sans text-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent transition-all duration-300";
+  // text-base (16px) on mobile prevents iOS Safari's focus auto-zoom; sm+ keeps text-sm
+  const inputClasses = "w-full px-4 py-3 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 rounded-xl font-sans text-base sm:text-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent transition-all duration-300";
 
   return (
     <motion.div

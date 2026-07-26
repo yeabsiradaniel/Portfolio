@@ -27,7 +27,7 @@ const Hero = () => {
 
   const tagline = (
     <h2
-      className="font-heading font-semibold text-white lg:text-gray-950 dark:text-gray-100"
+      className="font-heading font-semibold text-gray-950 dark:text-gray-100"
       style={{
         fontSize: 'clamp(1.1rem, 2.4vw, 1.6rem)',
         textShadow: 'var(--hero-shadow-sm)',
@@ -39,7 +39,7 @@ const Hero = () => {
 
   const intro = (
     <p
-      className="text-sm lg:text-base text-white/90 lg:text-gray-900 dark:text-gray-200/90 font-sans transition-colors duration-300 leading-relaxed"
+      className="text-sm lg:text-base text-gray-900 dark:text-gray-200/90 font-sans transition-colors duration-300 leading-relaxed"
       style={{ textShadow: 'var(--hero-shadow-sm)' }}
     >
       Flutter mobile developer and full-stack engineer with production apps on Google Play Store. I build cross-platform mobile apps, REST APIs, and web applications for clients and companies.
@@ -111,7 +111,7 @@ const Hero = () => {
             <motion.button
               onClick={() => scrollToSection('contact')}
               whileTap={{ scale: 0.97 }}
-              className="py-4 px-10 rounded-full text-lg font-bold font-sans border-2 border-white/50 dark:border-white/20 hover:border-accent hover:text-accent transition-colors duration-300 text-white dark:text-gray-200 w-full sm:w-auto"
+              className="py-4 px-10 rounded-full text-lg font-bold font-sans border-2 border-transparent glass-card hover:border-accent hover:text-accent transition-colors duration-300 text-gray-800 dark:text-gray-200 w-full sm:w-auto"
             >
               Contact Me
             </motion.button>
@@ -142,7 +142,7 @@ const Hero = () => {
         transition={{ delay: 0.45, duration: 0.7, ease: 'easeOut' }}
         className="hidden lg:flex absolute left-10 xl:left-16 top-1/2 z-20 flex-col items-center gap-4"
       >
-        <div className="w-px h-16 bg-gradient-to-b from-transparent via-white/30 to-transparent" />
+        <div className="w-px h-16 bg-gradient-to-b from-transparent via-white/40 to-transparent" />
         {socialLinks.map((link) => (
           <motion.a
             key={link.label}
@@ -152,13 +152,13 @@ const Hero = () => {
             aria-label={link.label}
             whileHover={{ scale: 1.2, y: -2 }}
             whileTap={{ scale: 0.9 }}
-            className="p-2 rounded-lg text-white/80 dark:text-white/70 hover:text-accent hover:bg-accent/10 transition-colors duration-300"
+            className="p-2 rounded-lg text-white/85 hover:text-accent hover:bg-accent/10 transition-colors duration-300"
             style={{ textShadow: 'var(--hero-shadow-sm)' }}
           >
             {link.icon}
           </motion.a>
         ))}
-        <div className="w-px h-16 bg-gradient-to-b from-transparent via-white/30 to-transparent" />
+        <div className="w-px h-16 bg-gradient-to-b from-transparent via-white/40 to-transparent" />
       </motion.div>
 
       {/* Scroll indicator: bottom-right, clear of the centered scene controls */}
@@ -169,18 +169,18 @@ const Hero = () => {
         onClick={() => scrollToSection('about')}
         className="absolute bottom-6 right-6 z-20 cursor-pointer hidden sm:flex flex-col items-center gap-2 group"
       >
-        <span className="text-xs font-sans tracking-widest uppercase text-white/60 dark:text-white/60 group-hover:text-accent transition-colors duration-300" style={{ textShadow: 'var(--hero-shadow-sm)' }}>
+        <span className="text-xs font-sans tracking-widest uppercase text-white/70 group-hover:text-accent transition-colors duration-300" style={{ textShadow: 'var(--hero-shadow-sm)' }}>
           Scroll
         </span>
         <motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
-          className="w-5 h-8 rounded-full border-2 border-white/40 dark:border-white/40 flex justify-center pt-1 group-hover:border-accent transition-colors duration-300"
+          className="w-5 h-8 rounded-full border-2 border-white/50 flex justify-center pt-1 group-hover:border-accent transition-colors duration-300"
         >
           <motion.div
             animate={{ opacity: [1, 0.3, 1], y: [0, 6, 0] }}
             transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
-            className="w-1 h-2 rounded-full bg-white/60 dark:bg-white/60"
+            className="w-1 h-2 rounded-full bg-white/70"
           />
         </motion.div>
       </motion.div>

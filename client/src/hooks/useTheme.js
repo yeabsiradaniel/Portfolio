@@ -12,6 +12,34 @@ const ThemeContext = createContext();
  */
 export const useTheme = () => useContext(ThemeContext);
 
+// localStorage can throw in restrictive browsing modes (private windows,
+// locked-down enterprise browsers) — never let it blank the app.
+const storage = {
+  get: (key) => {
+    try {
+      return localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  },
+  set: (key, value) => {
+    try {
+      localStorage.setItem(key, value);
+    } catch {
+      /* persistence unavailable; session-only preference */
+    }
+  },
+};
+
+const prefersDark = () =>
+  typeof window !== 'undefined' &&
+  typeof window.matchMedia === 'function' &&
+  window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+// First visit follows the OS preference; an explicit toggle is persisted
+// and always wins on later visits.
+const initialTheme = () => storage.get('theme') || (prefersDark() ? 'dark' : 'light');
+
 /**
  * The ThemeProvider component.
  * This component wraps the application and provides the theme state and toggle function to all its children.
@@ -27,14 +55,14 @@ export const useTheme = () => useContext(ThemeContext);
  * @param {React.ReactNode} props.children - The child components to be rendered within the provider.
  */
 export const ThemeProvider = ({ children }) => {
-  // Initialize the theme state. It tries to get the theme from localStorage first,
-  // otherwise, it defaults to 'light'.
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+  // Initialize the theme state. Stored choice first; otherwise the OS
+  // preference (prefers-color-scheme), falling back to light.
+  const [theme, setTheme] = useState(initialTheme);
 
   // Material explicitly chosen via the scene controls is persisted; without a
   // stored choice the material follows the mode default.
   const [material, setMaterialState] = useState(
-    () => localStorage.getItem('material') || defaultMaterialFor(localStorage.getItem('theme') || 'light')
+    () => storage.get('material') || defaultMaterialFor(storage.get('theme') || 'light')
   );
 
   // useEffect hook to apply side effects when the theme state changes.
@@ -49,10 +77,10 @@ export const ThemeProvider = ({ children }) => {
     root.classList.add(theme);
 
     // Save the current theme choice to localStorage to persist it across browser sessions.
-    localStorage.setItem('theme', theme);
+    storage.set('theme', theme);
 
     // Re-resolve the material: keep an explicit choice, otherwise follow the mode.
-    setMaterialState(localStorage.getItem('material') || defaultMaterialFor(theme));
+    setMaterialState(storage.get('material') || defaultMaterialFor(theme));
   }, [theme]); // This effect runs whenever the `theme` state changes.
 
   // Apply the (theme, material) design tokens to the document root.
@@ -72,7 +100,7 @@ export const ThemeProvider = ({ children }) => {
    * switches and reloads.
    */
   const setMaterial = (name) => {
-    localStorage.setItem('material', name);
+    storage.set('material', name);
     setMaterialState(name);
   };
 
