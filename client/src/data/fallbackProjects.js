@@ -8,8 +8,8 @@ const fallbackProjects = [
       'Gamified step-tracking fitness app built with Flutter, Django, PostgreSQL, and Firebase Cloud Messaging. Integrates the native pedometer via platform channels, GPS-mapped walking routes, and a milestone challenge system. Currently in Google Play beta with a CI/CD release pipeline.',
     techStack: ['Flutter', 'Django', 'PostgreSQL', 'Firebase'],
     imageUrl: null,
-    liveUrl: null,
-    githubUrl: null,
+    liveLink: null,
+    githubLink: null,
     featured: true,
   },
   {
@@ -19,8 +19,8 @@ const fallbackProjects = [
       'Frontend lead for a production navigation API platform. Built interactive map interfaces serving delivery clients including Adika and Tikus in Addis Ababa, with REST API integration and real-time location features.',
     techStack: ['React', 'JavaScript', 'REST APIs', 'Tailwind CSS'],
     imageUrl: '/images/gebeta-maps-screenshot.png',
-    liveUrl: 'https://gebeta.app',
-    githubUrl: null,
+    liveLink: "https://gebeta.app",
+    githubLink: null,
     featured: false,
   },
   {
@@ -30,8 +30,8 @@ const fallbackProjects = [
       'Real-time sales CRM with a drag-and-drop Kanban pipeline, live Recharts dashboard, and WebSocket-driven activity feed. JWT authentication with refresh token rotation, role-based access, rate limiting, and team management.',
     techStack: ['React', 'Node.js', 'Express', 'MongoDB', 'Socket.io'],
     imageUrl: null,
-    liveUrl: null,
-    githubUrl: null,
+    liveLink: null,
+    githubLink: null,
     featured: false,
   },
   {
@@ -41,8 +41,8 @@ const fallbackProjects = [
       'Personal finance app that parses bank SMS from multiple Ethiopian banks, auto-categorizes transactions, and enforces 50/30/20 budgets. Includes a visual SMS template builder with smart tokenization and auto-regex generation.',
     techStack: ['Flutter', 'Dart', 'Riverpod', 'Hive'],
     imageUrl: null,
-    liveUrl: null,
-    githubUrl: null,
+    liveLink: null,
+    githubLink: null,
     featured: false,
   },
 ];
