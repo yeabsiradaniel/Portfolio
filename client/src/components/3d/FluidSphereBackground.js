@@ -109,17 +109,18 @@ const materialPresets = {
     iridescenceIOR: 1.3,
     thickness: 0.0,
   },
-  // oil-slick — near-black base with full iridescent rainbow shift
+  // oil-slick — near-black dielectric with strong thin-film rainbow shift
   'oil-slick': {
-    color: new THREE.Color(0x0d0d0f),
-    roughness: 0.12,
-    metalness: 0.4,
+    color: new THREE.Color(0x0b0b10),
+    roughness: 0.1,
+    metalness: 0.0,
     transmission: 0.0,
     ior: 1.5,
     clearcoat: 1.0,
     clearcoatRoughness: 0.05,
     iridescence: 1.0,
-    iridescenceIOR: 1.2,
+    iridescenceIOR: 1.35,
+    iridescenceThicknessRange: [120, 700],
     thickness: 0.0,
   },
   // smoked-glass — dark frosted transmissive, the moody sibling of glass
@@ -254,6 +255,7 @@ const FluidSphereBackground = ({ renderName = true }) => {
       clearcoatRoughness: materialPresets.obsidian.clearcoatRoughness,
       iridescence: materialPresets.obsidian.iridescence,
       iridescenceIOR: materialPresets.obsidian.iridescenceIOR,
+      iridescenceThicknessRange: [100, 400],
       sheen: 0,
       sheenRoughness: 0.5,
       sheenColor: new THREE.Color(0xffffff),
@@ -622,6 +624,9 @@ const FluidSphereBackground = ({ renderName = true }) => {
       material.clearcoatRoughness = THREE.MathUtils.lerp(material.clearcoatRoughness, targetMaterialProps.clearcoatRoughness, lerpFactor);
       material.iridescence = THREE.MathUtils.lerp(material.iridescence, targetMaterialProps.iridescence, lerpFactor);
       material.iridescenceIOR = THREE.MathUtils.lerp(material.iridescenceIOR, targetMaterialProps.iridescenceIOR, lerpFactor);
+      const tRange = targetMaterialProps.iridescenceThicknessRange ?? [100, 400];
+      material.iridescenceThicknessRange[0] = THREE.MathUtils.lerp(material.iridescenceThicknessRange[0], tRange[0], lerpFactor);
+      material.iridescenceThicknessRange[1] = THREE.MathUtils.lerp(material.iridescenceThicknessRange[1], tRange[1], lerpFactor);
       material.thickness = THREE.MathUtils.lerp(material.thickness, targetMaterialProps.thickness, lerpFactor);
       // sheen defaults to off when a preset doesn't define it
       material.sheen = THREE.MathUtils.lerp(material.sheen, targetMaterialProps.sheen ?? 0, lerpFactor);
