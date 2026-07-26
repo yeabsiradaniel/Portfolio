@@ -116,9 +116,9 @@ const ProjectModal = ({ project, closeModal }) => {
 
             {/* Links */}
             <div className="flex flex-wrap gap-3 pt-4 border-t border-gray-200/50 dark:border-gray-700/50">
-              {project.liveUrl && (
+              {project.liveLink && (
                 <a
-                  href={project.liveUrl}
+                  href={project.liveLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   onPointerDown={(e) => e.stopPropagation()}
@@ -129,9 +129,9 @@ const ProjectModal = ({ project, closeModal }) => {
                   Live Demo
                 </a>
               )}
-              {project.githubUrl && (
+              {project.githubLink && (
                 <a
-                  href={project.githubUrl}
+                  href={project.githubLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   onPointerDown={(e) => e.stopPropagation()}

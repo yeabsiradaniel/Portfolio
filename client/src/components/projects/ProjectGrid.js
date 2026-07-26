@@ -77,9 +77,9 @@ const FeaturedProject = ({ project, openModal }) => (
         >
           View Case Study
         </button>
-        {project.liveUrl && (
+        {project.liveLink && (
           <a
-            href={project.liveUrl}
+            href={project.liveLink}
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
@@ -88,9 +88,9 @@ const FeaturedProject = ({ project, openModal }) => (
             <FaExternalLinkAlt className="h-3.5 w-3.5" /> Live Demo
           </a>
         )}
-        {project.githubUrl && (
+        {project.githubLink && (
           <a
-            href={project.githubUrl}
+            href={project.githubLink}
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
