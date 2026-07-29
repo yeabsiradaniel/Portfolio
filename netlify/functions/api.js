@@ -42,6 +42,7 @@ const handleUpload = (req, res, next) => {
 // Import models
 const Project = require('../../server/models/Project');
 const Message = require('../../server/models/Message');
+const { sendContactNotification } = require('../../server/mailer');
 
 // Initialize the Express application
 const app = express();
@@ -96,6 +97,9 @@ app.post('/api/contact', async (req, res) => {
   const newMessage = new Message({ name, email, message });
   try {
     const savedMessage = await newMessage.save();
+    // Notify after saving — a mail failure must never lose the message
+    // or break the sender's success response.
+    sendContactNotification({ name, email, message });
     res.status(201).json(savedMessage);
   } catch (err) {
     res.status(400).json({ message: err.message });
