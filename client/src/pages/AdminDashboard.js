@@ -69,6 +69,30 @@ const AdminDashboard = () => {
   };
 
   /**
+   * Moves a project one step up or down in display order and persists the
+   * new order. The first project in the list is the featured spotlight on
+   * the public site. On failure the list is refetched to restore truth.
+   */
+  const onMove = async (index, direction) => {
+    const target = index + direction;
+    if (target < 0 || target >= projects.length) return;
+
+    const reordered = [...projects];
+    [reordered[index], reordered[target]] = [reordered[target], reordered[index]];
+    setProjects(reordered);
+
+    try {
+      const token = localStorage.getItem('token');
+      setAuthToken(token);
+      await api.put('/admin/projects-reorder', { ids: reordered.map((p) => p._id) });
+    } catch (err) {
+      console.error('Failed to save project order:', err);
+      const res = await api.get('/projects');
+      setProjects(res.data);
+    }
+  };
+
+  /**
    * Handles form submission for both creating and updating projects.
    */
   const onSubmit = async (e) => {
@@ -193,19 +217,47 @@ const AdminDashboard = () => {
         {/* List of Existing Projects */}
         <div>
           <h2 className="text-2xl font-bold mb-4">Existing Projects</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+            Use the arrows to rearrange — the first project is the featured spotlight on the site.
+          </p>
           <div className="space-y-4">
-            {projects.map((project) => (
+            {projects.map((project, index) => (
               <motion.div
                 key={project._id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="p-4 border rounded shadow-sm"
+                className="p-4 border rounded shadow-sm flex items-start gap-4"
               >
-                <h3 className="text-xl font-bold">{project.title}</h3>
-                <p>{project.description}</p>
-                <div className="flex space-x-4 mt-4">
-                  <button onClick={() => onEdit(project)} className="text-accent">Edit</button>
-                  <button onClick={() => onDelete(project._id)} className="text-red-500">Delete</button>
+                <div className="flex flex-col gap-1 pt-1">
+                  <button
+                    onClick={() => onMove(index, -1)}
+                    disabled={index === 0}
+                    aria-label={`Move ${project.title} up`}
+                    className="px-2 py-1 rounded border text-sm disabled:opacity-30 disabled:cursor-not-allowed hover:bg-accent/10 transition-colors"
+                  >
+                    ↑
+                  </button>
+                  <button
+                    onClick={() => onMove(index, 1)}
+                    disabled={index === projects.length - 1}
+                    aria-label={`Move ${project.title} down`}
+                    className="px-2 py-1 rounded border text-sm disabled:opacity-30 disabled:cursor-not-allowed hover:bg-accent/10 transition-colors"
+                  >
+                    ↓
+                  </button>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold">
+                    {index === 0 && (
+                      <span className="mr-2 text-xs font-sans font-semibold uppercase tracking-wider text-accent align-middle">Featured</span>
+                    )}
+                    {project.title}
+                  </h3>
+                  <p>{project.description}</p>
+                  <div className="flex space-x-4 mt-4">
+                    <button onClick={() => onEdit(project)} className="text-accent">Edit</button>
+                    <button onClick={() => onDelete(project._id)} className="text-red-500">Delete</button>
+                  </div>
                 </div>
               </motion.div>
             ))}
