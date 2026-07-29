@@ -65,10 +65,19 @@ mongoose.connect(process.env.MONGODB_URI)
 
 // --- API Routes ---
 
+// Shared display ordering: projects with an explicit order come first
+// (ascending), unordered ones keep their natural creation order after.
+const byDisplayOrder = (a, b) => {
+  const ao = a.order ?? Number.MAX_SAFE_INTEGER;
+  const bo = b.order ?? Number.MAX_SAFE_INTEGER;
+  if (ao !== bo) return ao - bo;
+  return new Date(a.createdAt || 0) - new Date(b.createdAt || 0);
+};
+
 app.get('/api/projects', async (req, res) => {
   try {
     const projects = await Project.find();
-    res.json(projects);
+    res.json(projects.sort(byDisplayOrder));
   } catch (err) {
     console.error('Error fetching projects:', err);
     res.status(500).json({ message: 'Internal server error while fetching projects.' });
@@ -177,6 +186,27 @@ app.put('/api/admin/projects/:id', [auth, handleUpload], async (req, res) => {
         console.error(err.message);
         res.status(500).send('Server Error');
     }
+});
+
+// Reorder: accepts the full ordered list of project ids and writes
+// sequential order values. The first id becomes the featured project.
+app.put('/api/admin/projects-reorder', auth, async (req, res) => {
+  const { ids } = req.body;
+  if (!Array.isArray(ids) || ids.length === 0) {
+    return res.status(400).json({ msg: 'An ordered array of project ids is required' });
+  }
+  try {
+    await Project.bulkWrite(
+      ids.map((id, index) => ({
+        updateOne: { filter: { _id: id }, update: { $set: { order: index } } },
+      }))
+    );
+    const projects = await Project.find();
+    res.json(projects.sort(byDisplayOrder));
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
 });
 
 app.delete('/api/admin/projects/:id', auth, async (req, res) => {

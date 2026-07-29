@@ -29,6 +29,12 @@ const projectSchema = new mongoose.Schema({
   imageUrl: {
     type: String
   },
+  // 'order' field: display position, set by the admin reorder feature.
+  // Projects without an order sort after ordered ones (see GET /projects).
+  order: {
+    type: Number,
+    default: null
+  },
 });
 
 // Create and export the Project model
