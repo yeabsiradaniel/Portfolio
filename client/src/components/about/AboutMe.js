@@ -54,7 +54,7 @@ const AboutMe = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="text-base lg:text-lg text-gray-900 dark:text-gray-300 leading-relaxed font-sans mb-8 transition-colors duration-300"
           >
-            I build production apps that people actually use. Currently developing ShegerWalk, a gamified fitness app deploying to the Play Store. Previously led frontend at Gebeta Maps, a navigation platform serving delivery businesses in Addis Ababa. I've shipped mobile and web solutions for multiple clients, from expense trackers with SMS parsing to restaurant ordering systems.
+            I build production apps that people actually use. Currently developing ShegerWalk, a gamified fitness app live on the Play Store. Previously led frontend at Gebeta Maps, a navigation platform serving delivery businesses in Addis Ababa. I've shipped mobile and web solutions for multiple clients, from expense trackers with SMS parsing to restaurant ordering systems.
           </motion.p>
 
           {/* Stats row */}

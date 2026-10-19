@@ -5,7 +5,7 @@ const timelineData = [
   {
     year: '2026',
     title: 'Flutter Developer',
-    company: 'ShegerWalk (NDA, Play Store Beta)',
+    company: 'ShegerWalk (NDA, Play Store)',
     description: 'Building a gamified step-tracking app for a client using Flutter, Django, PostgreSQL, and FCM. Features native pedometer integration, GPS-mapped walks, and milestone challenges.',
   },
   {

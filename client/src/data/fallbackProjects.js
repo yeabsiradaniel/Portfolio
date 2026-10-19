@@ -5,7 +5,7 @@ const fallbackProjects = [
     _id: 'fallback-shegerwalk',
     title: 'ShegerWalk',
     description:
-      'Gamified step-tracking fitness app built with Flutter, Django, PostgreSQL, and Firebase Cloud Messaging. Integrates the native pedometer via platform channels, GPS-mapped walking routes, and a milestone challenge system. Currently in Google Play beta with a CI/CD release pipeline.',
+      'Gamified step-tracking fitness app built with Flutter, Django, PostgreSQL, and Firebase Cloud Messaging. Integrates the native pedometer via platform channels, GPS-mapped walking routes, and a milestone challenge system. Live in Google Play production with a CI/CD release pipeline.',
     techStack: ['Flutter', 'Django', 'PostgreSQL', 'Firebase'],
     imageUrl: null,
     liveLink: null,
